@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://dh3bwvtubkl7h"]
+
+[ext_resource type="PackedScene" uid="uid://b4yumrb4c0xyd" path="res://MetalEngineBase/Cardfight/Card/Card.tscn" id="1_u8p8b"]
+[ext_resource type="Script" uid="uid://cb3ywj2ccr8al" path="res://Scenes/card_builder.gd" id="1_v8uc1"]
+[ext_resource type="PackedScene" uid="uid://dx7eqlxkraf7i" path="res://Scenes/CardModuleDescriptor.tscn" id="3_2x0uv"]
+[ext_resource type="Script" uid="uid://bcrnrsyr12m2a" path="res://MetalEngineBase/Utils/InputScroll.gd" id="3_hphbb"]
+
+[node name="PanelContainer" type="PanelContainer" unique_id=1734559054 node_paths=PackedStringArray("Menu", "cardShowcasee", "cardModuleDesc")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_v8uc1")
+Menu = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu")
+cardShowcasee = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Card")
+cardModuleDesc = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1375090321]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1558389786]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1214783862]
+layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="PanelContainer/VBoxContainer/HBoxContainer2" unique_id=841222932]
+layout_mode = 2
+
+[node name="PopupMenu" type="PopupMenu" parent="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar" unique_id=235790351]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1825110963]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Card" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1687597269 instance=ExtResource("1_u8p8b")]
+layout_mode = 2
+size_flags_horizontal = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=321670756]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1343092748]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer" unique_id=1372693879]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=568014859]
+layout_mode = 2
+text = "Card Name"
+
+[node name="LineEdit" type="LineEdit" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=1284878822]
+layout_mode = 2
+
+[node name="InputScroll" type="ScrollContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=362962328]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+script = ExtResource("3_hphbb")
+metadata/_custom_type_script = "uid://bcrnrsyr12m2a"
+
+[node name="PanelContainer3" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll" unique_id=926999404 instance=ExtResource("3_2x0uv")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="index_pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu" to="." method="_on_popup_menu_index_pressed"]

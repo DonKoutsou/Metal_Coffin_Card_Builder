@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://csmy1kwmds8pf"]
+
+[ext_resource type="PackedScene" uid="uid://cg2ofk6jjjdtp" path="res://Scenes/CardModuleProperty.tscn" id="1_nhg3n"]
+[ext_resource type="Script" uid="uid://lxghro0ouadf" path="res://Scenes/card_module_int_property.gd" id="2_a3eh1"]
+
+[node name="PanelContainer" unique_id=2071651446 node_paths=PackedStringArray("box") instance=ExtResource("1_nhg3n")]
+script = ExtResource("2_a3eh1")
+box = NodePath("VBoxContainer/SpinBox")
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer" parent_id_path=PackedInt32Array(1776421015) index="1" unique_id=1574657274]
+layout_mode = 2
+alignment = 2

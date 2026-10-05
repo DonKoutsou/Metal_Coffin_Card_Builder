@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cg2ofk6jjjdtp"]
+
+[ext_resource type="Script" uid="uid://1gaw0y26isut" path="res://Scenes/card_module_property.gd" id="1_ctj4c"]
+
+[node name="PanelContainer" type="PanelContainer" unique_id=2071651446 node_paths=PackedStringArray("nameLabel")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ctj4c")
+nameLabel = NodePath("VBoxContainer/Label")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1776421015]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1656817199]
+layout_mode = 2
+text = "Property Name"
+horizontal_alignment = 2
