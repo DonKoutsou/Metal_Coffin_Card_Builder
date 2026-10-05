@@ -5,6 +5,7 @@ class_name CardBuilder
 @export var Menu : PopupMenu
 @export var cardShowcasee : Card
 @export var cardModuleDesc : CardModuleDescriptor
+@export var nameEdit : LineEdit
 
 var cards : Array[CardStats]
 
@@ -16,7 +17,8 @@ func _ready() -> void:
 
 func SetCard(c : CardStats) -> void:
 	cardShowcasee.SetCardStats(c)
-	cardModuleDesc.ConfigureModule(c.OnPerformModule)
+	cardModuleDesc.ConfigureCard(c)
+	nameEdit.text = c.GetCardName()
 
 #--------------------------------------------------------
 ##Checks happening directory and pulls all of them out

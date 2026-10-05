@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dx7eqlxkraf7i" path="res://Scenes/CardModuleDescriptor.tscn" id="3_2x0uv"]
 [ext_resource type="Script" uid="uid://bcrnrsyr12m2a" path="res://MetalEngineBase/Utils/InputScroll.gd" id="3_hphbb"]
 
-[node name="PanelContainer" type="PanelContainer" unique_id=1734559054 node_paths=PackedStringArray("Menu", "cardShowcasee", "cardModuleDesc")]
+[node name="PanelContainer" type="PanelContainer" unique_id=1734559054 node_paths=PackedStringArray("Menu", "cardShowcasee", "cardModuleDesc", "nameEdit")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,6 +15,7 @@ script = ExtResource("1_v8uc1")
 Menu = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu")
 cardShowcasee = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Card")
 cardModuleDesc = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3")
+nameEdit = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/LineEdit")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1375090321]
 layout_mode = 2

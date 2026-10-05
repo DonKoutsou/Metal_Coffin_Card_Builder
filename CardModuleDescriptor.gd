@@ -4,13 +4,29 @@ class_name CardModuleDescriptor
 
 @export var boolScene : PackedScene
 @export var intScene : PackedScene
+@export var enumScene : PackedScene
 
-func ConfigureModule(module : CardModule) -> void:
+func ConfigureCard(c : CardStats) -> void:
 	for g in get_child(0).get_children():
 		g.queue_free()
-	
+		
+	ConfigureModule(c.OnPerformModule)
+	for g in c.OnUseModules:
+		ConfigureModule(g)
+
+func ConfigureModule(module : CardModule) -> void:
 	if (module == null):
 		return
+	
+	var container : VBoxContainer = VBoxContainer.new()
+	get_child(0).add_child(container)
+	var l : Label = Label.new()
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.text = module.get_script().get_global_name()
+	container.add_child(l)
+	var grid : GridContainer = GridContainer.new()
+	grid.columns = 2
+	container.add_child(grid)
 	
 	var props : Array[Dictionary] = get_all_script_variables(module)
 	
@@ -29,24 +45,26 @@ func ConfigureModule(module : CardModule) -> void:
 				moduleDesc = boolScene.instantiate()
 			Variant.Type.TYPE_INT:
 				if (hint == PropertyHint.PROPERTY_HINT_ENUM):
-					continue
+					var enumData = get_exported_enum_data(prop)
+					var enumDesc : CardModuleEnumProperty = enumScene.instantiate()
+					enumDesc.SetOptions(enumData)
+					moduleDesc = enumDesc
 				else:
 					moduleDesc = intScene.instantiate()
 			_:
 				continue
 
 		moduleDesc.SetProperty(properyName, module.get(properyName))
-		get_child(0).add_child(moduleDesc)
+		grid.add_child(moduleDesc)
 
-func get_exported_enum_data(prop_dict: Dictionary) -> Dictionary:
-	var enum_data = {}
+func get_exported_enum_data(prop_dict: Dictionary) -> PackedStringArray:
+	var enum_data : PackedStringArray = []
 	
 	if prop_dict.hint == PROPERTY_HINT_ENUM:
-		# "IDLE,RUNNING,DEAD" -> ["IDLE", "RUNNING", "DEAD"]
 		var keys = prop_dict.hint_string.split(",")
 		
 		for i in keys.size():
-			enum_data[keys[i]] = i  # Maps {"IDLE": 0, "RUNNING": 1...}
+			enum_data.append(keys[i])
 			
 	return enum_data
 
