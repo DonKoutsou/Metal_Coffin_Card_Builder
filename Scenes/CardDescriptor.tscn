@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dx7eqlxkraf7i"]
+
+[ext_resource type="Script" uid="uid://cp2t4s8pc81sc" path="res://CardModuleDescriptor.gd" id="1_ykqoi"]
+[ext_resource type="PackedScene" uid="uid://cton060uqs6el" path="res://Scenes/Properties/CardModule_Boolean_Property.tscn" id="2_ykqoi"]
+[ext_resource type="PackedScene" uid="uid://csmy1kwmds8pf" path="res://Scenes/Properties/CardModule_Int_Property.tscn" id="3_keh2r"]
+[ext_resource type="PackedScene" uid="uid://onpsyg2ilvtb" path="res://Scenes/Properties/CardModule_Enum_Property.tscn" id="4_8duig"]
+[ext_resource type="PackedScene" uid="uid://deq3ume1168c" path="res://Scenes/Properties/CardModule_Float_Property.tscn" id="5_8mh7x"]
+[ext_resource type="PackedScene" uid="uid://cs0ngjuwcbtfb" path="res://Scenes/Sections/CardModuleSection.tscn" id="6_w83ba"]
+
+[node name="PanelContainer" type="PanelContainer" unique_id=926999404]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_ykqoi")
+boolScene = ExtResource("2_ykqoi")
+intScene = ExtResource("3_keh2r")
+enumScene = ExtResource("4_8duig")
+floatScene = ExtResource("5_8mh7x")
+simpleSectionScene = ExtResource("6_w83ba")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1301438398]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=737612563]
+layout_mode = 2

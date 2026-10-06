@@ -13,3 +13,7 @@ func SetOptions(ops : PackedStringArray) -> void:
 func SetProperty(pName : String, value : Variant) -> void:
 	super(pName, value)
 	option.select(value)
+
+
+func _on_option_button_item_selected(index: int) -> void:
+	PropertyChanged.emit(propertyName, index)

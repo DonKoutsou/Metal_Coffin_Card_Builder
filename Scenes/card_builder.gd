@@ -4,21 +4,31 @@ class_name CardBuilder
 
 @export var Menu : PopupMenu
 @export var cardShowcasee : Card
-@export var cardModuleDesc : CardModuleDescriptor
+@export var cardDesc : CardDescriptor
 @export var nameEdit : LineEdit
+@export var costBox : SpinBox
+@export var texturePicker : ResourcePicker
 
 var cards : Array[CardStats]
+var currentCard : int = 0
 
 var startingDir : String
 
 func _ready() -> void:
-	cardShowcasee.SetRealistic()
 	UpdateDilogues()
 
 func SetCard(c : CardStats) -> void:
 	cardShowcasee.SetCardStats(c)
-	cardModuleDesc.ConfigureCard(c)
+	
 	nameEdit.text = c.GetCardName()
+	costBox.value = c.GetCost()
+	cardShowcasee.SetRealistic()
+	
+	var path : String = c.txFile
+	if (path.contains("uid")):
+		path = ResourceUID.ensure_path(c.txFile)
+
+	texturePicker.SetFile(path)
 
 #--------------------------------------------------------
 ##Checks happening directory and pulls all of them out
@@ -43,8 +53,14 @@ func UpdateDilogues() -> void:
 							Menu.add_item(crd.GetCardName())
 				
 				file_name = dir.get_next()
-	SetCard(cards[0])
+	SetCard(cards[currentCard])
 
 
 func _on_popup_menu_index_pressed(index: int) -> void:
+	currentCard = index
 	SetCard(cards[index])
+	cardDesc.ConfigureCard(cards[index])
+
+
+func _on_panel_container_3_card_updated() -> void:
+	SetCard(cards[currentCard])

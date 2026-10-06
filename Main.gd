@@ -31,11 +31,6 @@ func _ready() -> void:
 	basePackPicker.SetFile(dirs.BaseDataDir)
 	
 	ProjectSettings.set_setting("application/config/mod_dir", dirs.ModDir)
-	
-	var editor_domain := TranslationServer.get_or_add_domain(&"")
-	for locale: String in TRANSLATIONS:
-		editor_domain.add_translation(load(dirs.ModDir + "/" +locale))
-	editor_domain.set_locale_override("english")
 
 func _on_launch_pressed() -> void:
 	if (dirs.ModDir.is_empty()):
@@ -45,7 +40,12 @@ func _on_launch_pressed() -> void:
 	if (dirs.BaseDataDir.is_empty()):
 		print("No Mod Pack dir selected")
 		return
-		
+	
+	var editor_domain := TranslationServer.get_or_add_domain(&"")
+	for locale: String in TRANSLATIONS:
+		editor_domain.add_translation(load(dirs.ModDir + "/" +locale))
+	editor_domain.set_locale_override("english")
+	
 	get_child(0).queue_free()
 	
 	ProjectSettings.load_resource_pack(dirs.BaseDataDir)

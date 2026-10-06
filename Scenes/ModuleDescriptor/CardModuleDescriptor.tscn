@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://dkysp308rnh0n"]
+
+[ext_resource type="Script" uid="uid://dtt2qns7nvdiy" path="res://Scenes/ModuleDescriptor/card_module_descriptor.gd" id="1_3p4sa"]
+
+[node name="CardModuleDescriptor" type="FoldableContainer" unique_id=1481781955 node_paths=PackedStringArray("modulePropertiesParent")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3p4sa")
+modulePropertiesParent = NodePath("VBoxContainer/GridContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=332067218]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1583292462]
+layout_mode = 2
+
+[node name="MoveUp" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=894418085]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Move Up"
+
+[node name="MoveDown" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=143252917]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Move Down"
+
+[node name="Remove" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1245545125]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Remove"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" unique_id=1117541964]
+layout_mode = 2
+columns = 3
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/MoveUp" to="." method="_on_move_up_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/MoveDown" to="." method="_on_move_down_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Remove" to="." method="_on_remove_pressed"]

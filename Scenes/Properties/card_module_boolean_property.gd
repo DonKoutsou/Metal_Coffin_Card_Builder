@@ -7,3 +7,7 @@ class_name CardModuleBooleanProperty
 func SetProperty(pName : String, value : Variant) -> void:
 	super(pName, value)
 	box.set_pressed_no_signal(value)
+
+
+func _on_check_box_toggled(toggled_on: bool) -> void:
+	PropertyChanged.emit(propertyName, toggled_on)

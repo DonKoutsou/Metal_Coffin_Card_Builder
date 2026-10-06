@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://dpgd2iwdu5gw7"]
+
+[ext_resource type="PackedScene" uid="uid://dkysp308rnh0n" path="res://Scenes/ModuleDescriptor/CardModuleDescriptor.tscn" id="1_mp5vd"]
+[ext_resource type="Script" uid="uid://bfb6vr5hn3vf8" path="res://Scenes/ModuleDescriptor/CardPassiveModuleDescriptor.gd" id="2_eacbl"]
+
+[node name="CardModuleDescriptor" unique_id=1481781955 node_paths=PackedStringArray("receiverOption", "targetOption", "ModuleName") instance=ExtResource("1_mp5vd")]
+script = ExtResource("2_eacbl")
+receiverOption = NodePath("VBoxContainer/HBoxContainer2/Instigator")
+targetOption = NodePath("VBoxContainer/HBoxContainer2/Target")
+ModuleName = NodePath("VBoxContainer/Label")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" parent_id_path=PackedInt32Array(332067218) index="1" unique_id=309245717]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" index="0" unique_id=1058616905]
+layout_mode = 2
+text = "Intstigator :"
+
+[node name="Instigator" type="OptionButton" parent="VBoxContainer/HBoxContainer2" index="1" unique_id=1903157906]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2" index="2" unique_id=42942854]
+layout_mode = 2
+text = "Target"
+
+[node name="Target" type="OptionButton" parent="VBoxContainer/HBoxContainer2" index="3" unique_id=403049260]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer" parent_id_path=PackedInt32Array(332067218) index="2" unique_id=1741321064]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "Module Name"
+
+[node name="GridContainer" parent="VBoxContainer" parent_id_path=PackedInt32Array(332067218) index="3" unique_id=1117541964]
+size_flags_vertical = 3
+
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer2/Instigator" to="." method="_on_instigator_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer2/Target" to="." method="_on_target_item_selected"]

@@ -2,10 +2,11 @@
 
 [ext_resource type="PackedScene" uid="uid://b4yumrb4c0xyd" path="res://MetalEngineBase/Cardfight/Card/Card.tscn" id="1_u8p8b"]
 [ext_resource type="Script" uid="uid://cb3ywj2ccr8al" path="res://Scenes/card_builder.gd" id="1_v8uc1"]
-[ext_resource type="PackedScene" uid="uid://dx7eqlxkraf7i" path="res://Scenes/CardModuleDescriptor.tscn" id="3_2x0uv"]
+[ext_resource type="PackedScene" uid="uid://dx7eqlxkraf7i" path="res://Scenes/CardDescriptor.tscn" id="3_2x0uv"]
+[ext_resource type="PackedScene" uid="uid://sf4cxl8op2tv" path="res://MetalEngineBase/Utils/ResourcePicker.tscn" id="3_48hsl"]
 [ext_resource type="Script" uid="uid://bcrnrsyr12m2a" path="res://MetalEngineBase/Utils/InputScroll.gd" id="3_hphbb"]
 
-[node name="PanelContainer" type="PanelContainer" unique_id=1734559054 node_paths=PackedStringArray("Menu", "cardShowcasee", "cardModuleDesc", "nameEdit")]
+[node name="PanelContainer" type="PanelContainer" unique_id=1734559054 node_paths=PackedStringArray("Menu", "cardShowcasee", "cardDesc", "nameEdit", "costBox", "texturePicker")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,9 +14,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_v8uc1")
 Menu = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu")
-cardShowcasee = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Card")
-cardModuleDesc = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3")
-nameEdit = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/LineEdit")
+cardShowcasee = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Control/Card")
+cardDesc = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3")
+nameEdit = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/LineEdit")
+costBox = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2/SpinBox")
+texturePicker = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/ResourcePicker")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1375090321]
 layout_mode = 2
@@ -35,9 +38,12 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Card" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1687597269 instance=ExtResource("1_u8p8b")]
+[node name="Control" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1529483612]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
-size_flags_horizontal = 6
+
+[node name="Card" parent="PanelContainer/VBoxContainer/HBoxContainer/Control" unique_id=1687597269 instance=ExtResource("1_u8p8b")]
+layout_mode = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=321670756]
 layout_mode = 2
@@ -46,15 +52,41 @@ size_flags_horizontal = 3
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1343092748]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer" unique_id=1372693879]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer" unique_id=1144710291]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=568014859]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=290551553]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1372693879]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=568014859]
 layout_mode = 2
 text = "Card Name"
 
-[node name="LineEdit" type="LineEdit" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=1284878822]
+[node name="LineEdit" type="LineEdit" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1284878822]
 layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1068864268]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1242654701]
+layout_mode = 2
+text = "Card Cost"
+
+[node name="SpinBox" type="SpinBox" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=960169394]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=436753619]
+layout_mode = 2
+text = "Card Texture"
+
+[node name="ResourcePicker" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=316868228 instance=ExtResource("3_48hsl")]
+layout_mode = 2
+resource_Tyoes = PackedStringArray("*.png")
 
 [node name="InputScroll" type="ScrollContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=362962328]
 layout_mode = 2
@@ -70,3 +102,4 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [connection signal="index_pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="CardUpdated" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3" to="." method="_on_panel_container_3_card_updated"]

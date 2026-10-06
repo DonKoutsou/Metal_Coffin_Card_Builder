@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cg2ofk6jjjdtp"]
 
-[ext_resource type="Script" uid="uid://1gaw0y26isut" path="res://Scenes/card_module_property.gd" id="1_ctj4c"]
+[ext_resource type="Script" uid="uid://1gaw0y26isut" path="res://Scenes/Properties/card_module_property.gd" id="1_ctj4c"]
 
 [node name="PanelContainer" type="PanelContainer" unique_id=2071651446 node_paths=PackedStringArray("nameLabel")]
 anchors_preset = 15
