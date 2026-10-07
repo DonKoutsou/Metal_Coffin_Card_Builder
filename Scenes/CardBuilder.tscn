@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b4yumrb4c0xyd" path="res://MetalEngineBase/Cardfight/Card/Card.tscn" id="1_u8p8b"]
 [ext_resource type="Script" uid="uid://cb3ywj2ccr8al" path="res://Scenes/card_builder.gd" id="1_v8uc1"]
+[ext_resource type="Theme" uid="uid://de7fb8k462lxb" path="res://MetalEngineBase/Theme/PopTheme.tres" id="1_wlw5y"]
 [ext_resource type="PackedScene" uid="uid://dx7eqlxkraf7i" path="res://Scenes/CardDescriptor.tscn" id="3_2x0uv"]
 [ext_resource type="PackedScene" uid="uid://sf4cxl8op2tv" path="res://MetalEngineBase/Utils/ResourcePicker.tscn" id="3_48hsl"]
 [ext_resource type="Script" uid="uid://bcrnrsyr12m2a" path="res://MetalEngineBase/Utils/InputScroll.gd" id="3_hphbb"]
@@ -12,6 +13,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_wlw5y")
 script = ExtResource("1_v8uc1")
 Menu = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu")
 cardShowcasee = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Control/Card")

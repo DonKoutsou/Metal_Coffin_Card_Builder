@@ -19,6 +19,9 @@ signal PropertyChanged()
 var SectionName : String = ""
 var modAmm : int = 0
 
+func _ready() -> void:
+	foldCont.folded = true
+
 func GetContentParent() -> Control:
 	return contentParent
 
@@ -138,6 +141,9 @@ func OnPropertyChanged(pName : String, newValue : Variant, obj : Object) -> void
 	obj.set(pName, newValue)
 	PropertyChanged.emit()
 
+func _on_add_pressed() -> void:
+	Add.emit()
+
 func get_exported_enum_data(prop_dict: Dictionary) -> PackedStringArray:
 	var enum_data : PackedStringArray = []
 	
@@ -153,7 +159,3 @@ func get_all_script_variables(res : Resource) -> Array[Dictionary]:
 	return res.get_property_list().filter(func(prop):
 		return prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE
 	)
-
-
-func _on_add_pressed() -> void:
-	Add.emit()

@@ -52,7 +52,8 @@ func ConfigureCard(c : CardStats) -> void:
 	leftOnHandSection.PropertyChanged.connect(OnPropertyChanged)
 	
 	if (c.Passive):
-		passiveSection.ConfigurePassive(c.Passive)
+		var passiveDesc = passiveSection.ConfigurePassive(c.Passive)
+		passiveDesc.Remove.connect(PassiveRemoved.bind(c.Passive))
 	
 	if (c.OnPerformModule != null):
 		var modDesc = onPerformSection.ConfigureModule(c.OnPerformModule)
@@ -67,10 +68,13 @@ func ConfigureCard(c : CardStats) -> void:
 		modDesc.Remove.connect(ModuleRemoved.bind(g))
 	
 	if (c.OnLeftOnHandModule):
-		for g in c.OnLeftOnHandModule:
-			var modDesc = leftOnHandSection.ConfigureModule(g)
-			modDesc.Remove.connect(ModuleRemoved.bind(g))
-	
+		var modDesc = leftOnHandSection.ConfigureModule(c.OnLeftOnHandModule)
+		modDesc.Remove.connect(ModuleRemoved.bind(c.OnLeftOnHandModule))
+
+func PassiveRemoved(passive : Card_Passive) -> void:
+	describedCard.Passive = null
+	ResaveCard()
+	CardUpdated.emit()
 
 func ModuleRemoved(mod : CardModule) -> void:
 	if (describedCard.OnPerformModule == mod):
@@ -88,20 +92,99 @@ func Add_PASSIVE() -> void:
 	if (describedCard.Passive != null):
 		printerr("Card Can Only Have 1 Passive")
 		return
+	
+	var newPassive = await SelectPassive()
+	
+	var newModule = await SelectModule(false)
+	newPassive.Module = newModule
+	describedCard.Passive = newPassive
+	
+	var passiveDesc = passiveSection.ConfigurePassive(newPassive)
+	passiveDesc.Remove.connect(PassiveRemoved.bind(newPassive))
+	OnPropertyChanged()
+	
 
 func Add_ONPERFORM() -> void:
 	if (describedCard.OnPerformModule != null):
 		printerr("Card Can Only Have 1 Perform Module")
 		return
+	
+	var newModule = await SelectModule()
+	describedCard.OnPerformModule = newModule
+	newModule.resource_path = describedCard.resource_path
+	
+	
+	var modDesc = onPerformSection.ConfigureModule(newModule)
+	modDesc.Remove.connect(ModuleRemoved.bind(newModule))
+	OnPropertyChanged()
 
 func Add_ONUSE() -> void:
-	pass
+	var newModule = await SelectModule()
+	describedCard.OnUseModules.append(newModule)
+	newModule.resource_path = describedCard.resource_path
+	
+	var modDesc = onUseSection.ConfigureModule(newModule)
+	modDesc.Remove.connect(ModuleRemoved.bind(newModule))
+	OnPropertyChanged()
 
 func Add_ONDISCARD() -> void:
-	pass
+	var newModule = await SelectModule()
+	describedCard.OnDiscardModules.append(newModule)
+	newModule.resource_path = describedCard.resource_path
+	
+	var modDesc = onDiscardSection.ConfigureModule(newModule)
+	modDesc.Remove.connect(ModuleRemoved.bind(newModule))
+	OnPropertyChanged()
 
 func Add_ONLEFTONHAND() -> void:
-	pass
+	if (describedCard.OnLeftOnHandModule != null):
+		printerr("Card Can Only Have 1 Perform Module")
+		return
+		
+	var newModule = await SelectModule()
+	describedCard.OnLeftOnHandModule = newModule
+	newModule.resource_path = describedCard.resource_path
+	
+	var modDesc = leftOnHandSection.ConfigureModule(newModule)
+	modDesc.Remove.connect(ModuleRemoved.bind(newModule))
+	OnPropertyChanged()
+
+func SelectPassive() -> Card_Passive:
+	var passiveList = GetPassiveList()
+	
+	var opt : OptionButton = OptionButton.new()
+	for g in passiveList:
+		opt.add_item(g)
+	
+	add_child(opt)
+	opt.show_popup()
+	var selected = await opt.item_selected
+	opt.queue_free()
+	
+	var selectedName = passiveList.keys()[selected]
+	
+	return passiveList[selectedName].new()
+
+func SelectModule(allowPassive : bool = true) -> CardModule:
+	var moduleList = GetModuleList(allowPassive)
+	
+	var opt : OptionButton = OptionButton.new()
+	for g in moduleList:
+		opt.add_item(g)
+	
+	add_child(opt)
+	opt.show_popup()
+	var selected = await opt.item_selected
+	opt.queue_free()
+	
+	var selectedName = moduleList.keys()[selected]
+	
+	var script : GDScript = moduleList[selectedName]
+	var moduleInstance = moduleList[selectedName].new()
+	var uid = ResourceUID.path_to_uid(script.resource_path)
+	moduleInstance.set_meta("_custom_type_script", uid)
+	return moduleInstance
+	
 
 func OnPropertyChanged() -> void:
 	ResaveCard()
@@ -139,5 +222,67 @@ func AddPassiveSection(ReceiverType : Card_Passive.ReceiverType, Target : Card_P
 	hcontainer.add_child(l2)
 	return container
 
+func GetModuleList(allowPassive : bool) -> Dictionary[String, GDScript]:
+	var module_list: Dictionary[String, GDScript] = {}
+	var global_class_list: Array[Dictionary] = ProjectSettings.get_global_class_list()
 
-	
+	# class name -> class info
+	var classes: Dictionary[String, Dictionary] = {}
+
+	for info: Dictionary in global_class_list:
+		classes[info["class"]] = info
+
+	for info: Dictionary in global_class_list:
+		var clName: String = info["class"]
+
+		if _inherits_from(clName, "CardModule", classes):
+			var class_path: String = info["path"]
+			var prName = prettify_class_name(clName)
+			var sc : GDScript = load(class_path)
+			
+			if (!allowPassive):
+				if (sc.CanBeInPassive()):
+					module_list[prName] = sc
+			else:
+				module_list[prName] = sc
+
+	return module_list
+
+func GetPassiveList() -> Dictionary[String, GDScript]:
+	var module_list: Dictionary[String, GDScript] = {}
+	var global_class_list: Array[Dictionary] = ProjectSettings.get_global_class_list()
+
+	# class name -> class info
+	var classes: Dictionary[String, Dictionary] = {}
+
+	for info: Dictionary in global_class_list:
+		classes[info["class"]] = info
+
+	for info: Dictionary in global_class_list:
+		var clName: String = info["class"]
+
+		if _inherits_from(clName, "Card_Passive", classes):
+			var class_path: String = info["path"]
+			var prName = prettify_class_name(clName)
+			module_list[prName] = load(class_path)
+
+	return module_list
+
+
+func _inherits_from(clName: String,target_class: String,classes: Dictionary[String, Dictionary]) -> bool:
+	var current: String = clName
+
+	while classes.has(current):
+		var base: String = classes[current]["base"]
+
+		if base == target_class:
+			return true
+
+		current = base
+
+	return false
+
+func prettify_class_name(clName: String) -> String:
+	var regex := RegEx.new()
+	regex.compile("(?<!^)([A-Z])")
+	return regex.sub(clName, " $1", true)

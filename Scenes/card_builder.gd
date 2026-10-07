@@ -54,6 +54,7 @@ func UpdateDilogues() -> void:
 				
 				file_name = dir.get_next()
 	SetCard(cards[currentCard])
+	cardDesc.ConfigureCard(cards[currentCard])
 
 
 func _on_popup_menu_index_pressed(index: int) -> void:
