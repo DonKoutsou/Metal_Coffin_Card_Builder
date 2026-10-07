@@ -19,7 +19,7 @@ Menu = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu")
 cardShowcasee = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Control/Card")
 cardDesc = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3")
 nameEdit = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/LineEdit")
-costBox = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2/SpinBox")
+costBox = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2/Cost")
 texturePicker = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/ResourcePicker")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1375090321]
@@ -79,7 +79,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Card Cost"
 
-[node name="SpinBox" type="SpinBox" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=960169394]
+[node name="Cost" type="SpinBox" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=960169394]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=436753619]
@@ -104,4 +104,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [connection signal="index_pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="text_changed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="value_changed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer2/Cost" to="." method="_on_cost_value_changed"]
 [connection signal="CardUpdated" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3" to="." method="_on_panel_container_3_card_updated"]

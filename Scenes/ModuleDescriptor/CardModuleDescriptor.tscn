@@ -32,9 +32,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Remove"
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer" unique_id=1117541964]
+[node name="GridContainer" type="HFlowContainer" parent="VBoxContainer" unique_id=1297098660]
 layout_mode = 2
-columns = 3
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/MoveUp" to="." method="_on_move_up_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/MoveDown" to="." method="_on_move_down_pressed"]

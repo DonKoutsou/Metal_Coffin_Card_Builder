@@ -65,3 +65,19 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 
 func _on_panel_container_3_card_updated() -> void:
 	SetCard(cards[currentCard])
+
+func ResaveCard() -> void:
+	ResourceSaver.save(cards[currentCard], cards[currentCard].resource_path)
+	print("Card Saved At {0}".format([cards[currentCard].resource_path]))
+
+
+func _on_line_edit_text_changed(new_text: String) -> void:
+	cards[currentCard].CardName = new_text
+	SetCard(cards[currentCard])
+	ResaveCard()
+
+
+func _on_cost_value_changed(value: float) -> void:
+	cards[currentCard].Energy = value
+	SetCard(cards[currentCard])
+	ResaveCard()

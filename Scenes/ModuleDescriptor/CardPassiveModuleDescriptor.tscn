@@ -34,7 +34,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 22
 text = "No Module"
 
-[node name="GridContainer" parent="VBoxContainer" parent_id_path=PackedInt32Array(332067218) index="3" unique_id=1117541964]
+[node name="GridContainer" parent="VBoxContainer" parent_id_path=PackedInt32Array(332067218) index="3" unique_id=1297098660]
 size_flags_vertical = 3
 
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer2/Instigator" to="." method="_on_instigator_item_selected"]

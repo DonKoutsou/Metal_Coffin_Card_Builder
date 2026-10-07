@@ -15,6 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
 theme_override_styles/panel = ExtResource("1_h48on")
 script = ExtResource("2_6p0gg")
 foldCont = NodePath("FoldableContainer")
