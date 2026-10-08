@@ -110,8 +110,16 @@ func HandleProperty(prop : Dictionary, module : CardModule) -> Control:
 				moduleDesc = enumDesc
 			else:
 				moduleDesc = intScene.instantiate()
+				if hint == PropertyHint.PROPERTY_HINT_RANGE:
+					var range_data: PackedStringArray = hintString.split(",")
+					moduleDesc.SetMax(str_to_var(range_data[1]))
+					
 		Variant.Type.TYPE_FLOAT:
 			moduleDesc = floatScene.instantiate()
+			if hint == PropertyHint.PROPERTY_HINT_RANGE:
+				var range_data: PackedStringArray = hintString.split(",")
+				moduleDesc.SetMax(str_to_var(range_data[1]))
+				
 		Variant.Type.TYPE_ARRAY:
 			if (hintString.contains("CardModule")):
 				var newSect : CardModuleSection = load(scene_file_path).instantiate()

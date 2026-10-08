@@ -9,6 +9,7 @@ box = NodePath("VBoxContainer/SpinBox")
 
 [node name="SpinBox" type="SpinBox" parent="VBoxContainer" parent_id_path=PackedInt32Array(1776421015) index="1" unique_id=1574657274]
 layout_mode = 2
+max_value = 1000.0
 alignment = 2
 
 [connection signal="value_changed" from="VBoxContainer/SpinBox" to="." method="_on_spin_box_value_changed"]
