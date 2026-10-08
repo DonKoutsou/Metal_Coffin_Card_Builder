@@ -15,6 +15,8 @@ class_name CardModuleSection
 
 signal Added(new)
 signal Removed(removed)
+signal MovedUp(moved)
+signal MovedDown(moved)
 signal PropertyChanged()
 
 var SectionName : String = ""
@@ -24,7 +26,8 @@ var MaxAmm : int = 0
 
 enum SectionType {
 	MODULE,
-	PASSIVE
+	PASSIVE,
+	DAMAGE_INFO
 }
 
 func _ready() -> void:
@@ -79,6 +82,12 @@ func ConfigureModule(module : CardModule) -> CardModuleDescriptor:
 	moduleContainer.title = module.get_script().get_global_name()
 	moduleContainer.folded = true
 	
+	if (MaxAmm > 1):
+		moduleContainer.MoveUp.connect(ModuleMovedUp.bind(module, moduleContainer))
+		moduleContainer.MoveDown.connect(ModuleMovedDown.bind(module, moduleContainer))
+	else:
+		moduleContainer.DissableMoving()
+		
 	moduleContainer.Remove.connect(ModuleRemoved.bind(module))
 	
 	var props : Array[Dictionary] = CardHelper.get_all_script_variables(module)
@@ -91,7 +100,37 @@ func ConfigureModule(module : CardModule) -> CardModuleDescriptor:
 	return moduleContainer
 
 #-------------------------------------------------------------------
-func HandleProperty(prop : Dictionary, module : CardModule) -> Control:
+func ConfigureDamageInfo(info : DamageInfo) -> CardModuleDescriptor:
+	if (info == null):
+		return
+	
+	modAmm += 1
+	UpdateSectionTitle()
+	
+	var moduleContainer : CardModuleDescriptor = moduleDescriptorScene.instantiate()
+	GetContentParent().add_child(moduleContainer)
+	moduleContainer.title = info.get_script().get_global_name()
+	moduleContainer.folded = true
+	
+	if (MaxAmm > 1):
+		moduleContainer.MoveUp.connect(DamageInfoMovedUp.bind(info, moduleContainer))
+		moduleContainer.MoveDown.connect(DamageInfoMovedDown.bind(info, moduleContainer))
+	else:
+		moduleContainer.DissableMoving()
+	
+	moduleContainer.Remove.connect(DamageInfoRemoved.bind(info))
+	
+	var props : Array[Dictionary] = CardHelper.get_all_script_variables(info)
+	
+	for prop : Dictionary in props :
+		var moduleDesc = HandleProperty(prop, info)
+		if (moduleDesc):
+			moduleContainer.GetModulePropertyParent().add_child(moduleDesc)
+
+	return moduleContainer
+
+#-------------------------------------------------------------------
+func HandleProperty(prop : Dictionary, obj : Object) -> Control:
 	var properyName : String = prop["name"]
 	var type : Variant.Type = prop["type"]
 	var hint : PropertyHint = prop["hint"]
@@ -121,39 +160,61 @@ func HandleProperty(prop : Dictionary, module : CardModule) -> Control:
 				moduleDesc.SetMax(str_to_var(range_data[1]))
 				
 		Variant.Type.TYPE_ARRAY:
-			if (hintString.contains("CardModule")):
-				var newSect : CardModuleSection = load(scene_file_path).instantiate()
-				newSect.SetSectionName(properyName)
-				
-				var moduleArr : Array[CardModule] = module.get(properyName)
-				
-				newSect.Added.connect(ModuleAddedInArray.bind(moduleArr))
-				newSect.Removed.connect(ModuleRemovedFromArray.bind(moduleArr))
-				newSect.PropertyChanged.connect(ModulePropertyChanged)
-				
-				for g in moduleArr:
+			var newSect : CardModuleSection = load(scene_file_path).instantiate()
+			newSect.SetSectionName(properyName)
+			
+			var infoArr : Array = obj.get(properyName)
+			
+			newSect.Added.connect(AddedInArray.bind(infoArr))
+			newSect.Removed.connect(RemovedFromArray.bind(infoArr))
+			
+			newSect.MovedUp.connect(MovedUpInArray.bind(infoArr))
+			newSect.MovedDown.connect(MovedDownInArray.bind(infoArr))
+			
+			newSect.PropertyChanged.connect(ModulePropertyChanged)
+			newSect.MaxAmm = 10
+			for g in infoArr:
+				if (g is DamageInfo):
+					newSect.ConfigureDamageInfo(g)
+				if (g is CardModule):
 					newSect.ConfigureModule(g)
-				newSect.custom_minimum_size = Vector2(size.x - 50, 0)
-				newSect.MaxAmm = 10
-				return newSect
-			else:
-				printerr("Array " + hintString)
-			return
+					
+			newSect.custom_minimum_size = Vector2(size.x - 50, 0)
+			
+			newSect.SectionT = SectionType.DAMAGE_INFO
+			return newSect
+
 		_:
 			printerr("Could not map property {0} of type {1}".format([properyName, type]))
 			return
 	
-	moduleDesc.SetProperty(properyName, module.get(properyName))
-	moduleDesc.PropertyChanged.connect(OnPropertyChanged.bind(module))
+	moduleDesc.SetProperty(properyName, obj.get(properyName))
+	moduleDesc.PropertyChanged.connect(OnPropertyChanged.bind(obj))
 	return moduleDesc
 
-func ModuleAddedInArray(mod : CardModule, arr : Array[CardModule]) -> void:
-	arr.append(mod)
+func AddedInArray(added , arr : Array) -> void:
+	arr.append(added)
 	PropertyChanged.emit()
 
-func ModuleRemovedFromArray(mod : CardModule, arr : Array[CardModule]) -> void:
-	arr.erase(mod)
+func RemovedFromArray(removed, arr : Array) -> void:
+	arr.erase(removed)
 	PropertyChanged.emit()
+
+func MovedUpInArray(moved, arr : Array) -> void:
+	var index = arr.find(moved)
+	if (index > 0):
+		var saved = arr[index - 1]
+		arr[index - 1] = moved
+		arr[index] = saved
+		PropertyChanged.emit()
+
+func MovedDownInArray(moved, arr : Array) -> void:
+	var index = arr.find(moved)
+	if (index < arr.size() - 1):
+		var saved = arr[index + 1]
+		arr[index + 1] = moved
+		arr[index] = saved
+		PropertyChanged.emit()
 
 func ModulePropertyChanged() -> void:
 	PropertyChanged.emit()
@@ -181,6 +242,16 @@ func AddPassive() -> Card_Passive:
 	
 	var modDesc = ConfigurePassive(newP)
 	return newP
+
+func AddDamageInfo() -> DamageInfo:
+	if (modAmm == MaxAmm):
+		print("Cant add more modules in this section")
+		return
+	
+	var newInfo = DamageInfo.new()
+	var infoDesc = ConfigureDamageInfo(newInfo)	
+	
+	return newInfo
 
 func SelectPassive() -> Card_Passive:
 	var passiveList = CardHelper.GetPassiveList()
@@ -219,8 +290,55 @@ func SelectModule(allowPassive : bool = true) -> CardModule:
 	moduleInstance.set_meta("_custom_type_script", uid)
 	return moduleInstance
 
+func ModuleMovedUp(movedModule : CardModule, moduleDesc : CardModuleDescriptor) -> void:
+	var content = GetContentParent().get_children()
+	var index = content.find(moduleDesc)
+	if (index == 0):
+		printerr("Cant move more up")
+		return
+		
+	GetContentParent().move_child(moduleDesc, index - 1)
+	MovedUp.emit(movedModule)
+
+func ModuleMovedDown(movedModule : CardModule, moduleDesc : CardModuleDescriptor) -> void:
+	var content = GetContentParent().get_children()
+	var index = content.find(moduleDesc)
+	if (index == content.size() - 1):
+		printerr("Cant move more down")
+		return
+		
+	GetContentParent().move_child(moduleDesc, index + 1)
+	
+	MovedDown.emit(movedModule)
+
+func DamageInfoMovedUp(movedInfo : DamageInfo, moduleDesc : CardModuleDescriptor) -> void:
+	var content = GetContentParent().get_children()
+	var index = content.find(moduleDesc)
+	if (index == 0):
+		printerr("Cant move more up")
+		return
+		
+	GetContentParent().move_child(moduleDesc, index - 1)
+	
+	MovedUp.emit(movedInfo)
+func  DamageInfoMovedDown(movedInfo : DamageInfo, moduleDesc : CardModuleDescriptor) -> void:
+	var content = GetContentParent().get_children()
+	var index = content.find(moduleDesc)
+	if (index == content.size() - 1):
+		printerr("Cant move more down")
+		return
+		
+	GetContentParent().move_child(moduleDesc, index + 1)
+	
+	MovedDown.emit(movedInfo)
+
 func ModuleRemoved(removedModule : CardModule) -> void:
 	Removed.emit(removedModule)
+	modAmm -= 1
+	UpdateSectionTitle()
+
+func DamageInfoRemoved(removedInfo : DamageInfo) -> void:
+	Removed.emit(removedInfo)
 	modAmm -= 1
 	UpdateSectionTitle()
 
@@ -240,3 +358,6 @@ func _on_add_pressed() -> void:
 	else: if (SectionT == SectionType.PASSIVE):
 		var newPassive = await AddPassive()
 		Added.emit(newPassive)
+	else: if (SectionT == SectionType.DAMAGE_INFO):
+		var newInfo = AddDamageInfo()
+		Added.emit(newInfo)

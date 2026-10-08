@@ -9,6 +9,12 @@ receiverOption = NodePath("VBoxContainer/HBoxContainer2/Instigator")
 targetOption = NodePath("VBoxContainer/HBoxContainer2/Target")
 ModuleName = NodePath("VBoxContainer/Label")
 
+[node name="MoveUp" parent="VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(1583292462) index="0" unique_id=894418085]
+visible = false
+
+[node name="MoveDown" parent="VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(1583292462) index="1" unique_id=143252917]
+visible = false
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" parent_id_path=PackedInt32Array(332067218) index="1" unique_id=309245717]
 layout_mode = 2
 

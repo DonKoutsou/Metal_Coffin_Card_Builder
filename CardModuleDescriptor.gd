@@ -45,6 +45,9 @@ func ConfigureCard(c : CardStats) -> void:
 	get_child(0).add_child(onUseSection)
 	onUseSection.Added.connect(Add_ONUSE)
 	onUseSection.Removed.connect(Remove_ONUSE)
+	onUseSection.MovedUp.connect(MoveUp.bind(describedCard.OnUseModules))
+	onUseSection.MovedDown.connect(MoveDown.bind(describedCard.OnUseModules))
+	
 	onUseSection.PropertyChanged.connect(OnPropertyChanged)
 	onUseSection.MaxAmm = 10
 	
@@ -52,6 +55,9 @@ func ConfigureCard(c : CardStats) -> void:
 	get_child(0).add_child(onDiscardSection)
 	onDiscardSection.Added.connect(Add_ONDISCARD)
 	onDiscardSection.Removed.connect(Remove_ONDISCARD)
+	onDiscardSection.MovedUp.connect(MoveUp.bind(describedCard.OnDiscardModules))
+	onDiscardSection.MovedDown.connect(MoveDown.bind(describedCard.OnDiscardModules))
+	
 	onDiscardSection.PropertyChanged.connect(OnPropertyChanged)
 	onDiscardSection.MaxAmm = 10
 	
@@ -91,6 +97,28 @@ func Add_ONPERFORM(newModule : CardModule) -> void:
 
 func Remove_ONPERFORM(removedModule : CardModule) -> void:
 	describedCard.OnPerformModule = null
+	OnPropertyChanged()
+
+
+
+func MoveUp(moved : Resource, arr : Array) -> void:
+	var index = arr.find(moved)
+	if (index == 0):
+		return
+	
+	var saved = arr[index - 1]
+	arr[index - 1] = moved
+	arr[index] = saved
+	OnPropertyChanged()
+
+func MoveDown(moved : Resource, arr : Array) -> void:
+	var index = arr.find(moved)
+	if (index == arr.size() - 1):
+		return
+	
+	var saved = arr[index + 1]
+	arr[index + 1] = moved
+	arr[index] = saved
 	OnPropertyChanged()
 
 func Add_ONUSE(newModule : CardModule) -> void:

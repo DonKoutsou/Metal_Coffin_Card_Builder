@@ -12,6 +12,10 @@ func GetModulePropertyParent() -> Control:
 	return modulePropertiesParent
 
 
+func DissableMoving() -> void:
+	$VBoxContainer/HBoxContainer/MoveUp.hide()
+	$VBoxContainer/HBoxContainer/MoveDown.hide()
+
 func _on_move_up_pressed() -> void:
 	MoveUp.emit()
 
