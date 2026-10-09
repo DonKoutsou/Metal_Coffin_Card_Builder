@@ -69,7 +69,7 @@ func ConfigureCard(c : CardStats) -> void:
 	leftOnHandSection.MaxAmm = 1
 	
 	if (c.Passive):
-		var passiveDesc = passiveSection.ConfigurePassive(c.Passive)
+		passiveSection.ConfigurePassive(c.Passive)
 	
 	if (c.OnPerformModule != null):
 		onPerformSection.ConfigureModule(c.OnPerformModule)

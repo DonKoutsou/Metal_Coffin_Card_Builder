@@ -4,8 +4,9 @@ class_name CardHelper
 
 static func GetModuleList(allowPassive : bool) -> Dictionary[String, GDScript]:
 	var module_list: Dictionary[String, GDScript] = {}
+	
 	var global_class_list: Array[Dictionary] = ProjectSettings.get_global_class_list()
-
+	
 	# class name -> class info
 	var classes: Dictionary[String, Dictionary] = {}
 
@@ -25,8 +26,72 @@ static func GetModuleList(allowPassive : bool) -> Dictionary[String, GDScript]:
 					module_list[prName] = sc
 			else:
 				module_list[prName] = sc
+	
+	#Also get scripts from mod instead of only base game to cover custom modules
+	var modCardModuleDir = Main.dirs.ModDir + "/MetalEngineBase/Cardfight/Card/Card_Modules/"
+	
+	var DirsToExplore :Array[String] = [modCardModuleDir]
+	for g in DirsToExplore:
+		var dir = DirAccess.open(g)
+		if dir:
+			dir.list_dir_begin()
+			var file_name = dir.get_next()
+			while file_name != "":
+				if dir.current_is_dir():
+					print("Found directory: " + file_name)
+					DirsToExplore.append(g + "/" + file_name)
+				else:
+					print("Found file: " + file_name)
+					if (file_name.ends_with(".gd")):
+						#Gather data for class
+						var clName = get_class_name_from_file(g + "/" + file_name)
+						var baseClass = get_extended_class_from_file(g + "/" + file_name)
+						var prName = prettify_class_name(clName)
+						
+						#If the module already exsists in the base pck skipp
+						#TODO find a way to override the base ones
+						if (!module_list.has(prName)):
+							
+							var customDic : Dictionary[String, String] = {"base" : baseClass}
+							classes[clName] = customDic
+							
+							#Check if it's a module
+							if _inherits_from(clName, "CardModule", classes):
+								var sc : GDScript = load(g + "/" + file_name)
+								
+								if (!allowPassive):
+									if (sc.CanBeInPassive()):
+										module_list[prName] = sc
+								else:
+									module_list[prName] = sc
+								
+				file_name = dir.get_next()
 
 	return module_list
+
+static func get_class_name_from_file(path: String) -> String:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return ""
+
+	while not file.eof_reached():
+		var line := file.get_line().strip_edges()
+		if line.begins_with("class_name "):
+			return line.trim_prefix("class_name ").split(" ")[0]
+
+	return ""
+
+static func get_extended_class_from_file(path: String) -> String:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return ""
+
+	while not file.eof_reached():
+		var line := file.get_line().strip_edges()
+		if line.begins_with("extends "):
+			return line.trim_prefix("extends ").split(" ")[0]
+
+	return ""
 
 static func GetPassiveList() -> Dictionary[String, GDScript]:
 	var module_list: Dictionary[String, GDScript] = {}
