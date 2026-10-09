@@ -84,6 +84,8 @@ func ConfigureCard(c : CardStats) -> void:
 		leftOnHandSection.ConfigureModule(c.OnLeftOnHandModule)
 
 func Add_PASSIVE(newPassive : Card_Passive) -> void:
+	if (describedCard.Passive):
+		return
 	describedCard.Passive = newPassive
 	OnPropertyChanged()
 
@@ -92,6 +94,8 @@ func Remove_PASSIVE(removedPassive : Card_Passive) -> void:
 	OnPropertyChanged()
 
 func Add_ONPERFORM(newModule : CardModule) -> void:
+	if (describedCard.OnPerformModule):
+		return
 	describedCard.OnPerformModule = newModule
 	OnPropertyChanged()
 

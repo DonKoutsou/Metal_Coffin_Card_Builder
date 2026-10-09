@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://dpgd2iwdu5gw7"]
 
-[ext_resource type="PackedScene" uid="uid://dkysp308rnh0n" path="res://Scenes/ModuleDescriptor/CardModuleDescriptor.tscn" id="1_mp5vd"]
 [ext_resource type="Script" uid="uid://bfb6vr5hn3vf8" path="res://Scenes/ModuleDescriptor/CardPassiveModuleDescriptor.gd" id="2_eacbl"]
 
-[node name="CardModuleDescriptor" unique_id=1481781955 node_paths=PackedStringArray("receiverOption", "targetOption", "ModuleName") instance=ExtResource("1_mp5vd")]
+[node name="CardModuleDescriptor" unique_id=1481781955 node_paths=PackedStringArray("receiverOption", "targetOption", "ModuleName")]
 script = ExtResource("2_eacbl")
 receiverOption = NodePath("VBoxContainer/HBoxContainer2/Instigator")
 targetOption = NodePath("VBoxContainer/HBoxContainer2/Target")

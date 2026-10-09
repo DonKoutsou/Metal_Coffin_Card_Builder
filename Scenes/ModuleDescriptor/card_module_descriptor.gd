@@ -1,28 +1,11 @@
-extends FoldableContainer
+extends FoldableCont
 
 class_name CardModuleDescriptor
 
 @export var modulePropertiesParent : Control
 
-signal MoveUp
-signal MoveDown
-signal Remove
-
 func GetModulePropertyParent() -> Control:
 	return modulePropertiesParent
-
-
-func DissableMoving() -> void:
-	$VBoxContainer/HBoxContainer/MoveUp.hide()
-	$VBoxContainer/HBoxContainer/MoveDown.hide()
-
-func _on_move_up_pressed() -> void:
-	MoveUp.emit()
-
-
-func _on_move_down_pressed() -> void:
-	MoveDown.emit()
-
 
 func _on_remove_pressed() -> void:
 	var confirm = ConfirmationDialog.new()

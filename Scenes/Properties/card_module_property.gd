@@ -13,4 +13,4 @@ func SetMax(newMax : Variant) -> void:
 
 func SetProperty(pName : String, _value : Variant) -> void:
 	propertyName = pName
-	nameLabel.text = pName
+	nameLabel.text = CardHelper.prettify_class_name(pName)

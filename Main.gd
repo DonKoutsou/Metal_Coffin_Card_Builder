@@ -58,19 +58,74 @@ func _on_launch_pressed() -> void:
 		ProjectSettings.load_resource_pack(dirs.ModPackDir)
 		globalClassList.append_array(ProjectSettings.get_global_class_list())
 	
-	CardHelper.LoadModScripts()
+	LoadModScripts()
 	
 	var cardB : CardBuilder = cardBuilderScene.instantiate()
 	cardB.startingDir = dirs.ModDir
 	add_child(cardB)
 
+#----------------------------------------------------------------------
 func _on_base_pack_picker_changed(t: String) -> void:
 	dirs.BaseDataDir = t
 	ResourceSaver.save(dirs, execPath + "SavedDir.tres")
 
-
+#----------------------------------------------------------------------
 func _on_project_picker_changed(t: String) -> void:
 	dirs.ModDir = t
 	ResourceSaver.save(dirs, execPath + "SavedDir.tres")
 	print("Captain Directory changed to {0}".format([t]))
 	ProjectSettings.set_setting("application/config/mod_dir", dirs.ModDir)
+
+#----------------------------------------------------------------------
+static func LoadModScripts() -> void:
+	var modCardModuleDir = Main.dirs.ModDir
+	
+	var existingClasses: Dictionary[String, String]
+	
+	var global_class_list: Array[Dictionary] = Main.globalClassList
+	
+	# class name -> class info
+	var classes: Dictionary[String, Dictionary] = {}
+
+	for info: Dictionary in global_class_list:
+		classes[info["class"]] = info
+
+	for info: Dictionary in global_class_list:
+		var clName: String = info["class"]
+
+		if CardHelper._inherits_from(clName, "CardModule", classes) or CardHelper._inherits_from(clName, "Card_Passive", classes):
+			var class_path: String = info["path"]
+			existingClasses[clName] = class_path
+	
+	var DirsToExplore :Array[String] = [modCardModuleDir]
+	for g in DirsToExplore:
+		var dir = DirAccess.open(g)
+		if dir:
+			dir.list_dir_begin()
+			var file_name = dir.get_next()
+			while file_name != "":
+				if dir.current_is_dir():
+					#print("Found directory: " + file_name)
+					DirsToExplore.append(g + "/" + file_name)
+				else:
+					#print("Found file: " + file_name)
+					if (file_name.ends_with(".gd")):
+						#Gather data for class
+						var clName = CardHelper.get_class_name_from_file(g + "/" + file_name)
+						var baseClass = CardHelper.get_extended_class_from_file(g + "/" + file_name)
+
+						if (existingClasses.has(clName)):
+							var originalScriptPath = existingClasses[clName]
+							var err = CardHelper.replace_class_source(originalScriptPath, g + "/" + file_name)
+							if (err != OK):
+								push_error("Replacing script returned with error {0}".format([err]))
+						else:
+							var customDic : Dictionary[String, String] = {
+								"base" : baseClass,
+								"class" : clName,
+								"path" : g + "/" + file_name
+								}
+							
+							Main.globalClassList.append(customDic)
+								
+				file_name = dir.get_next()

@@ -54,13 +54,13 @@ func ConfigurePassive(passive : Card_Passive) -> void:
 	var moduleContainer : CardPassiveModuleDescriptor = passiveModuleDescriptorScene.instantiate()
 	GetContentParent().add_child(moduleContainer)
 	moduleContainer.ConfigurePassive(passive)
-	moduleContainer.title = passive.get_script().get_global_name()
+	moduleContainer.title = CardHelper.prettify_class_name(passive.get_script().get_global_name())
 	moduleContainer.folded = true
 	
 	moduleContainer.Remove.connect(PassiveRemoved.bind(passive))
 	
 	moduleContainer.PassivePropertyChanged.connect(OnPropertyChanged.bind(passive))
-	
+	moduleContainer.DissableMoving()
 	var props : Array[Dictionary] = CardHelper.get_all_script_variables(passive.Module)
 	
 	for prop : Dictionary in props :
@@ -79,7 +79,7 @@ func ConfigureModule(module : CardModule) -> void:
 	
 	var moduleContainer : CardModuleDescriptor = moduleDescriptorScene.instantiate()
 	GetContentParent().add_child(moduleContainer)
-	moduleContainer.title = module.get_script().get_global_name()
+	moduleContainer.title = CardHelper.prettify_class_name(module.get_script().get_global_name())
 	moduleContainer.folded = true
 	
 	if (MaxAmm > 1):
@@ -108,7 +108,7 @@ func ConfigureDamageInfo(info : DamageInfo) -> void:
 	
 	var moduleContainer : CardModuleDescriptor = moduleDescriptorScene.instantiate()
 	GetContentParent().add_child(moduleContainer)
-	moduleContainer.title = info.get_script().get_global_name()
+	moduleContainer.title = CardHelper.prettify_class_name(info.get_script().get_global_name())
 	moduleContainer.folded = true
 	
 	if (MaxAmm > 1):
@@ -174,12 +174,14 @@ func HandleProperty(prop : Dictionary, obj : Object) -> Control:
 			for g in infoArr:
 				if (g is DamageInfo):
 					newSect.ConfigureDamageInfo(g)
+					newSect.SectionT = SectionType.DAMAGE_INFO
 				if (g is CardModule):
 					newSect.ConfigureModule(g)
+					newSect.SectionT = SectionType.MODULE
 					
 			newSect.custom_minimum_size = Vector2(size.x - 50, 0)
 			
-			newSect.SectionT = SectionType.DAMAGE_INFO
+			
 			return newSect
 		_:
 			printerr("Could not map property {0} of type {1}".format([properyName, type]))
