@@ -279,6 +279,8 @@ func SelectModule(allowPassive : bool = true) -> CardModule:
 	var moduleList = CardHelper.GetModuleList(allowPassive)
 	
 	var opt : OptionButton = OptionButton.new()
+	opt.allow_reselect = true
+	opt.search_bar_enabled = true
 	for g in moduleList:
 		opt.add_item(g)
 	

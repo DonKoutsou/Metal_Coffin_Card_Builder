@@ -10,6 +10,8 @@ var execPath : String
 
 static var dirs : SaveDirs
 
+static var globalClassList : Array[Dictionary]
+
 const TRANSLATIONS : PackedStringArray = [
 	"Localisations/LOC - Cards.english.translation",
 	"Localisations/LOC - Cards.greek.translation",
@@ -48,22 +50,26 @@ func _on_launch_pressed() -> void:
 	
 	get_child(0).queue_free()
 	
+	globalClassList = ProjectSettings.get_global_class_list()
 	ProjectSettings.load_resource_pack(dirs.BaseDataDir)
+	globalClassList.append_array(ProjectSettings.get_global_class_list())
+	
+	if (FileAccess.file_exists(dirs.ModPackDir)):
+		ProjectSettings.load_resource_pack(dirs.ModPackDir)
+		globalClassList.append_array(ProjectSettings.get_global_class_list())
+	
+	CardHelper.LoadModScripts()
 	
 	var cardB : CardBuilder = cardBuilderScene.instantiate()
 	cardB.startingDir = dirs.ModDir
 	add_child(cardB)
 
 func _on_base_pack_picker_changed(t: String) -> void:
-	if (t.is_empty()):
-		return
 	dirs.BaseDataDir = t
 	ResourceSaver.save(dirs, execPath + "SavedDir.tres")
 
 
 func _on_project_picker_changed(t: String) -> void:
-	if (t.is_empty()):
-		return
 	dirs.ModDir = t
 	ResourceSaver.save(dirs, execPath + "SavedDir.tres")
 	print("Captain Directory changed to {0}".format([t]))

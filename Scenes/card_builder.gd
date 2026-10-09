@@ -47,7 +47,7 @@ func UpdateDilogues() -> void:
 				else:
 					print("Found file: " + file_name)
 					if (file_name.ends_with(".tres")):
-						var crd = load(g + "/" + file_name)
+						var crd = ResourceLoader.load(g + "/" + file_name)
 						if (crd is CardStats):
 							cards.append(crd)
 							Menu.add_item(crd.GetCardName())
