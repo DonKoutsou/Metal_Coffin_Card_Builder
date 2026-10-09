@@ -15,7 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_wlw5y")
 script = ExtResource("1_v8uc1")
-Menu = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu")
+Menu = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/Pick Card")
 cardShowcasee = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Control/Card")
 cardDesc = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3")
 nameEdit = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/LineEdit")
@@ -34,7 +34,9 @@ layout_mode = 2
 [node name="MenuBar" type="MenuBar" parent="PanelContainer/VBoxContainer/HBoxContainer2" unique_id=841222932]
 layout_mode = 2
 
-[node name="PopupMenu" type="PopupMenu" parent="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar" unique_id=235790351]
+[node name="Pick Card" type="PopupMenu" parent="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar" unique_id=235790351]
+mode = 4
+search_bar_enabled = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1825110963]
 layout_mode = 2
@@ -102,7 +104,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[connection signal="index_pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/PopupMenu" to="." method="_on_popup_menu_index_pressed"]
+[connection signal="index_pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/Pick Card" to="." method="_on_popup_menu_index_pressed"]
 [connection signal="text_changed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="value_changed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/Cost" to="." method="_on_cost_value_changed"]
 [connection signal="CardUpdated" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3" to="." method="_on_panel_container_3_card_updated"]
