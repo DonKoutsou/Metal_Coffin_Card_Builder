@@ -2,11 +2,6 @@ extends PanelContainer
 
 class_name CardDescriptor
 
-@export var boolScene : PackedScene
-@export var intScene : PackedScene
-@export var enumScene : PackedScene
-@export var floatScene : PackedScene
-
 @export var simpleSectionScene : PackedScene
 
 signal CardUpdated

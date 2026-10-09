@@ -2,16 +2,19 @@ extends PanelContainer
 
 class_name FoldableCont
 
+@export var container : Control
+
 signal MoveUp
 signal MoveDown
 signal Remove
+signal Add
 
 var title : String :
 	set(value):
 		title = value
 		$VBoxContainer/HBoxContainer/Expand.text = value
 
-var folded : bool :
+var folded : bool  = true:
 	set(value):
 		folded = value
 		FoldToggled(value)
@@ -21,15 +24,15 @@ var folded : bool :
 func DissableMoving() -> void:
 	$VBoxContainer/HBoxContainer/MoveUp.hide()
 	$VBoxContainer/HBoxContainer/MoveDown.hide()
-
-func _ready() -> void:
-	child_entered_tree.connect(ChildAdded)
-
-func ChildAdded(newChild : Node) -> void:
-	newChild.reparent($VBoxContainer/VBoxContainer)
+#
+#func _ready() -> void:
+	#child_entered_tree.connect(ChildAdded)
+#
+#func ChildAdded(newChild : Node) -> void:
+	#newChild.reparent($VBoxContainer/VBoxContainer)
 
 func GetContainer() -> Control:
-	return $VBoxContainer/VBoxContainer
+	return container
 
 func _on_move_up_pressed() -> void:
 	MoveUp.emit()
@@ -48,4 +51,8 @@ func FoldToggled(t : bool) -> void:
 		$VBoxContainer/HBoxContainer/Expand.icon = load("res://Scenes/FoldableContainer/Arrow.png")
 	else:
 		$VBoxContainer/HBoxContainer/Expand.icon = load("res://Scenes/FoldableContainer/Arrow2.png")
-	GetContainer().visible = !t
+	GetContainer().get_parent().visible = !t
+
+
+func _on_add_pressed() -> void:
+	Add.emit()

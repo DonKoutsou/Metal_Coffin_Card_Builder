@@ -5,4 +5,4 @@
 
 [node name="FoldableContainer" unique_id=811239154 node_paths=PackedStringArray("modulePropertiesParent") instance=ExtResource("1_fe3qk")]
 script = ExtResource("2_wiy85")
-modulePropertiesParent = NodePath("VBoxContainer/VBoxContainer")
+modulePropertiesParent = NodePath("VBoxContainer/MarginContainer/VBoxContainer")

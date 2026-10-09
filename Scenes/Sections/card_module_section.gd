@@ -1,9 +1,6 @@
-extends PanelContainer
+extends FoldableCont
 
 class_name CardModuleSection
-
-@export var foldCont : FoldableContainer
-@export var contentParent : Control
 
 @export var moduleDescriptorScene : PackedScene
 @export var passiveModuleDescriptorScene : PackedScene
@@ -30,20 +27,14 @@ enum SectionType {
 	DAMAGE_INFO
 }
 
-func _ready() -> void:
-	foldCont.folded = true
-
-func GetContentParent() -> Control:
-	return contentParent
-
 func SetSectionName(sectionName : String) -> void:
 	SectionName = sectionName
-	foldCont.title = sectionName
+	title = sectionName
 
 func UpdateSectionTitle() -> void:
-	foldCont.title = SectionName
+	title = SectionName
 	if (modAmm > 0):
-		foldCont.title += " ({0})".format([modAmm])
+		title += " ({0})".format([modAmm])
 
 #-------------------------------------------------------------------
 ##Creates a container for the passive and adds it to section
@@ -52,7 +43,7 @@ func ConfigurePassive(passive : Card_Passive) -> void:
 	UpdateSectionTitle()
 	
 	var moduleContainer : CardPassiveModuleDescriptor = passiveModuleDescriptorScene.instantiate()
-	GetContentParent().add_child(moduleContainer)
+	GetContainer().add_child(moduleContainer)
 	moduleContainer.ConfigurePassive(passive)
 	moduleContainer.title = CardHelper.prettify_class_name(passive.get_script().get_global_name())
 	moduleContainer.folded = true
@@ -78,7 +69,7 @@ func ConfigureModule(module : CardModule) -> void:
 	UpdateSectionTitle()
 	
 	var moduleContainer : CardModuleDescriptor = moduleDescriptorScene.instantiate()
-	GetContentParent().add_child(moduleContainer)
+	GetContainer().add_child(moduleContainer)
 	moduleContainer.title = CardHelper.prettify_class_name(module.get_script().get_global_name())
 	moduleContainer.folded = true
 	
@@ -107,7 +98,7 @@ func ConfigureDamageInfo(info : DamageInfo) -> void:
 	UpdateSectionTitle()
 	
 	var moduleContainer : CardModuleDescriptor = moduleDescriptorScene.instantiate()
-	GetContentParent().add_child(moduleContainer)
+	GetContainer().add_child(moduleContainer)
 	moduleContainer.title = CardHelper.prettify_class_name(info.get_script().get_global_name())
 	moduleContainer.folded = true
 	
@@ -301,48 +292,48 @@ func SelectModule(allowPassive : bool = true) -> CardModule:
 
 #-------------------------------------------------------------------
 func ModuleMovedUp(movedModule : CardModule, moduleDesc : CardModuleDescriptor) -> void:
-	var content = GetContentParent().get_children()
+	var content = GetContainer().get_children()
 	var index = content.find(moduleDesc)
 	if (index == 0):
 		printerr("Cant move more up")
 		return
 		
-	GetContentParent().move_child(moduleDesc, index - 1)
+	GetContainer().move_child(moduleDesc, index - 1)
 	MovedUp.emit(movedModule)
 
 #-------------------------------------------------------------------
 func ModuleMovedDown(movedModule : CardModule, moduleDesc : CardModuleDescriptor) -> void:
-	var content = GetContentParent().get_children()
+	var content = GetContainer().get_children()
 	var index = content.find(moduleDesc)
 	if (index == content.size() - 1):
 		printerr("Cant move more down")
 		return
 		
-	GetContentParent().move_child(moduleDesc, index + 1)
+	GetContainer().move_child(moduleDesc, index + 1)
 	
 	MovedDown.emit(movedModule)
 
 #-------------------------------------------------------------------
 func DamageInfoMovedUp(movedInfo : DamageInfo, moduleDesc : CardModuleDescriptor) -> void:
-	var content = GetContentParent().get_children()
+	var content = GetContainer().get_children()
 	var index = content.find(moduleDesc)
 	if (index == 0):
 		printerr("Cant move more up")
 		return
 		
-	GetContentParent().move_child(moduleDesc, index - 1)
+	GetContainer().move_child(moduleDesc, index - 1)
 	
 	MovedUp.emit(movedInfo)
 
 #-------------------------------------------------------------------
 func  DamageInfoMovedDown(movedInfo : DamageInfo, moduleDesc : CardModuleDescriptor) -> void:
-	var content = GetContentParent().get_children()
+	var content = GetContainer().get_children()
 	var index = content.find(moduleDesc)
 	if (index == content.size() - 1):
 		printerr("Cant move more down")
 		return
 		
-	GetContentParent().move_child(moduleDesc, index + 1)
+	GetContainer().move_child(moduleDesc, index + 1)
 	
 	MovedDown.emit(movedInfo)
 
