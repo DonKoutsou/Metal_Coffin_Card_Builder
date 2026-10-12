@@ -4,10 +4,10 @@
 [ext_resource type="Script" uid="uid://cb3ywj2ccr8al" path="res://Scenes/card_builder.gd" id="1_v8uc1"]
 [ext_resource type="Theme" uid="uid://de7fb8k462lxb" path="res://MetalEngineBase/Theme/PopTheme.tres" id="1_wlw5y"]
 [ext_resource type="PackedScene" uid="uid://dx7eqlxkraf7i" path="res://Scenes/CardDescriptor.tscn" id="3_2x0uv"]
-[ext_resource type="PackedScene" uid="uid://sf4cxl8op2tv" path="res://MetalEngineBase/Utils/ResourcePicker.tscn" id="3_48hsl"]
 [ext_resource type="Script" uid="uid://bcrnrsyr12m2a" path="res://MetalEngineBase/Utils/InputScroll.gd" id="3_hphbb"]
+[ext_resource type="PackedScene" uid="uid://irv52igireqs" path="res://Scenes/Sections/CardModuleFoldableSection.tscn" id="3_k0mt2"]
 
-[node name="PanelContainer" type="PanelContainer" unique_id=1734559054 node_paths=PackedStringArray("Menu", "cardShowcasee", "cardDesc", "nameEdit", "costBox", "texturePicker")]
+[node name="PanelContainer" type="PanelContainer" unique_id=1734559054 node_paths=PackedStringArray("Menu", "cardShowcasee", "cardDesc")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,10 +17,8 @@ theme = ExtResource("1_wlw5y")
 script = ExtResource("1_v8uc1")
 Menu = NodePath("PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/Pick Card")
 cardShowcasee = NodePath("PanelContainer/VBoxContainer/HBoxContainer/Control/Card")
-cardDesc = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3")
-nameEdit = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/LineEdit")
-costBox = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/Cost")
-texturePicker = NodePath("PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/ResourcePicker")
+cardDesc = NodePath("PanelContainer/VBoxContainer/HBoxContainer/InputScroll/PanelContainer3")
+sect = ExtResource("3_k0mt2")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1375090321]
 layout_mode = 2
@@ -49,48 +47,9 @@ layout_mode = 2
 [node name="Card" parent="PanelContainer/VBoxContainer/HBoxContainer/Control" unique_id=1687597269 instance=ExtResource("1_u8p8b")]
 layout_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=321670756]
+[node name="InputScroll" type="ScrollContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=362962328]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1144710291]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" unique_id=290551553]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1372693879]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=568014859]
-layout_mode = 2
-text = "Card Name"
-
-[node name="LineEdit" type="LineEdit" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1284878822]
-layout_mode = 2
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1068864268]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1242654701]
-layout_mode = 2
-text = "Card Cost"
-
-[node name="Cost" type="SpinBox" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=960169394]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" unique_id=436753619]
-layout_mode = 2
-text = "Card Texture"
-
-[node name="ResourcePicker" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" unique_id=316868228 instance=ExtResource("3_48hsl")]
-layout_mode = 2
-resource_Tyoes = PackedStringArray("*.png")
-
-[node name="InputScroll" type="ScrollContainer" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=362962328]
-layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
 draw_focus_border = true
@@ -99,12 +58,12 @@ vertical_scroll_mode = 3
 script = ExtResource("3_hphbb")
 metadata/_custom_type_script = "uid://bcrnrsyr12m2a"
 
-[node name="PanelContainer3" parent="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll" unique_id=926999404 instance=ExtResource("3_2x0uv")]
+[node name="PanelContainer3" parent="PanelContainer/VBoxContainer/HBoxContainer/InputScroll" unique_id=926999404 instance=ExtResource("3_2x0uv")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Timer" type="Timer" parent="." unique_id=2058590400]
+
 [connection signal="index_pressed" from="PanelContainer/VBoxContainer/HBoxContainer2/MenuBar/Pick Card" to="." method="_on_popup_menu_index_pressed"]
-[connection signal="text_changed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
-[connection signal="value_changed" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/Cost" to="." method="_on_cost_value_changed"]
-[connection signal="CardUpdated" from="PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/InputScroll/PanelContainer3" to="." method="_on_panel_container_3_card_updated"]
+[connection signal="CardUpdated" from="PanelContainer/VBoxContainer/HBoxContainer/InputScroll/PanelContainer3" to="." method="_on_panel_container_3_card_updated"]

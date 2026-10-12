@@ -24,7 +24,10 @@ var folded : bool  = true:
 func DissableMoving() -> void:
 	$VBoxContainer/HBoxContainer/MoveUp.hide()
 	$VBoxContainer/HBoxContainer/MoveDown.hide()
-#
+
+func DissableAdding() -> void:
+	$VBoxContainer/HBoxContainer/Add.hide()
+
 #func _ready() -> void:
 	#child_entered_tree.connect(ChildAdded)
 #

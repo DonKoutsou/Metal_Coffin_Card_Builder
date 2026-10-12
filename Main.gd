@@ -2,7 +2,7 @@ extends Control
 
 class_name Main
 
-@export var cardBuilderScene : PackedScene
+@export_file() var cardBuilderScene : String
 @export var projectPicker : ResourcePicker
 @export var basePackPicker : ResourcePicker
 
@@ -60,7 +60,8 @@ func _on_launch_pressed() -> void:
 	
 	LoadModScripts()
 	
-	var cardB : CardBuilder = cardBuilderScene.instantiate()
+	var cBuilder = load(cardBuilderScene)
+	var cardB : CardBuilder = cBuilder.instantiate()
 	cardB.startingDir = dirs.ModDir
 	add_child(cardB)
 
@@ -78,7 +79,7 @@ func _on_project_picker_changed(t: String) -> void:
 
 #----------------------------------------------------------------------
 static func LoadModScripts() -> void:
-	var modCardModuleDir = Main.dirs.ModDir
+	var modCardModuleDir = Main.dirs.ModDir + "/MetalEngineBase/Cardfight/Card/"
 	
 	var existingClasses: Dictionary[String, String]
 	

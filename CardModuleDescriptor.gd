@@ -8,8 +8,8 @@ signal CardUpdated
 
 var describedCard : CardStats
 
+var generalSettingsSecction : CardModuleSection
 var passiveSection : CardModuleSection
-var onPerformSection : CardModuleSection
 var onUseSection : CardModuleSection
 var onDiscardSection : CardModuleSection
 var leftOnHandSection : CardModuleSection
@@ -21,6 +21,11 @@ func ConfigureCard(c : CardStats) -> void:
 	for g in get_child(0).get_children():
 		g.queue_free()
 	
+	generalSettingsSecction = AddSection("GENERAL SETTINGS")
+	get_child(0).add_child(generalSettingsSecction)
+	generalSettingsSecction.DissableAdding()
+	generalSettingsSecction.PropertyChanged.connect(OnPropertyChanged)
+	
 	passiveSection = AddSection("PASSIVE")
 	get_child(0).add_child(passiveSection)
 	passiveSection.Added.connect(Add_PASSIVE)
@@ -28,13 +33,6 @@ func ConfigureCard(c : CardStats) -> void:
 	passiveSection.PropertyChanged.connect(OnPropertyChanged)
 	passiveSection.MaxAmm = 1
 	passiveSection.SectionT = CardModuleSection.SectionType.PASSIVE
-	
-	onPerformSection = AddSection("ON PERFORM")
-	get_child(0).add_child(onPerformSection)
-	onPerformSection.Added.connect(Add_ONPERFORM)
-	onPerformSection.Removed.connect(Remove_ONPERFORM)
-	onPerformSection.PropertyChanged.connect(OnPropertyChanged)
-	onPerformSection.MaxAmm = 1
 	
 	onUseSection = AddSection("ON USE")
 	get_child(0).add_child(onUseSection)
@@ -63,11 +61,17 @@ func ConfigureCard(c : CardStats) -> void:
 	leftOnHandSection.PropertyChanged.connect(OnPropertyChanged)
 	leftOnHandSection.MaxAmm = 1
 	
+	var props = CardHelper.get_all_script_variables(c)
+	
+	var wantedProps : PackedStringArray = ["CardName", "txFile", "Energy", "CardDescriptionOverride", "WeapT","Type", "PutOnTop", "CanManuallyDiscard", "AllowTier", "IsDisposition", "PlayAnimation"]
+	
+	for prop : Dictionary in props:
+		var properyName : String = prop["name"]
+		if (wantedProps.has(properyName)):
+			generalSettingsSecction.ManualProp(prop, c)
+	
 	if (c.Passive):
 		passiveSection.ConfigurePassive(c.Passive)
-	
-	if (c.OnPerformModule != null):
-		onPerformSection.ConfigureModule(c.OnPerformModule)
 
 	for g in c.OnUseModules:
 		onUseSection.ConfigureModule(g)
@@ -87,18 +91,6 @@ func Add_PASSIVE(newPassive : Card_Passive) -> void:
 func Remove_PASSIVE(removedPassive : Card_Passive) -> void:
 	describedCard.Passive = null
 	OnPropertyChanged()
-
-func Add_ONPERFORM(newModule : CardModule) -> void:
-	if (describedCard.OnPerformModule):
-		return
-	describedCard.OnPerformModule = newModule
-	OnPropertyChanged()
-
-func Remove_ONPERFORM(removedModule : CardModule) -> void:
-	describedCard.OnPerformModule = null
-	OnPropertyChanged()
-
-
 
 func MoveUp(moved : Resource, arr : Array) -> void:
 	var index = arr.find(moved)

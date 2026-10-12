@@ -9,6 +9,8 @@ class_name CardModuleSection
 @export var intScene : PackedScene
 @export var enumScene : PackedScene
 @export var floatScene : PackedScene
+@export var stringScene : PackedScene
+@export var stringFileScene : PackedScene
 
 signal Added(new)
 signal Removed(removed)
@@ -78,6 +80,8 @@ func ConfigureModule(module : CardModule) -> void:
 		moduleContainer.MoveDown.connect(ModuleMovedDown.bind(module, moduleContainer))
 	else:
 		moduleContainer.DissableMoving()
+	
+	
 		
 	moduleContainer.Remove.connect(ModuleRemoved.bind(module))
 	
@@ -117,6 +121,11 @@ func ConfigureDamageInfo(info : DamageInfo) -> void:
 		if (moduleDesc):
 			moduleContainer.GetModulePropertyParent().add_child(moduleDesc)
 
+func ManualProp(prop : Dictionary, obj : Object) -> void:
+	var moduleDesc = HandleProperty(prop, obj)
+	if (moduleDesc):
+		GetContainer().add_child(moduleDesc)
+	
 #-------------------------------------------------------------------
 ##Creates a container for the property and returns it
 func HandleProperty(prop : Dictionary, obj : Object) -> Control:
@@ -147,7 +156,18 @@ func HandleProperty(prop : Dictionary, obj : Object) -> Control:
 			if hint == PropertyHint.PROPERTY_HINT_RANGE:
 				var range_data: PackedStringArray = hintString.split(",")
 				moduleDesc.SetMax(str_to_var(range_data[1]))
-				
+		
+		Variant.Type.TYPE_STRING:
+			if (hint == PropertyHint.PROPERTY_HINT_FILE):
+				var fileDesc : CardModuleStringFileProperty = stringFileScene.instantiate()
+				fileDesc.picker.resource_Type = FileDialog.FileMode.FILE_MODE_OPEN_FILE
+				fileDesc.picker.allowExternalLinks = false
+				var filters = hintString.split(",")
+				fileDesc.picker.resource_Tyoes = filters
+				moduleDesc = fileDesc
+			else:
+				moduleDesc = stringScene.instantiate()
+		
 		Variant.Type.TYPE_ARRAY:
 			var newSect : CardModuleSection = load(scene_file_path).instantiate()
 			newSect.SetSectionName(properyName)

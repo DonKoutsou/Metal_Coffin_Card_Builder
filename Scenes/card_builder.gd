@@ -5,30 +5,24 @@ class_name CardBuilder
 @export var Menu : PopupMenu
 @export var cardShowcasee : Card
 @export var cardDesc : CardDescriptor
-@export var nameEdit : LineEdit
-@export var costBox : SpinBox
-@export var texturePicker : ResourcePicker
+@export var sect : PackedScene
 
 var cards : Array[CardStats]
 var currentCard : int = 0
 
 var startingDir : String
+var generalSection : CardModuleSection
 
 func _ready() -> void:
 	UpdateDilogues()
 
 func SetCard(c : CardStats) -> void:
 	cardShowcasee.SetCardStats(c)
-	
-	nameEdit.text = c.GetCardName()
-	costBox.value = c.GetCost()
 	cardShowcasee.SetRealistic()
 	
 	var path : String = c.txFile
 	if (path.contains("uid")):
 		path = ResourceUID.ensure_path(c.txFile)
-
-	texturePicker.SetFile(path)
 
 #--------------------------------------------------------
 ##Checks happening directory and pulls all of them out
@@ -62,7 +56,6 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 	SetCard(cards[index])
 	cardDesc.ConfigureCard(cards[index])
 
-
 func _on_panel_container_3_card_updated() -> void:
 	SetCard(cards[currentCard])
 
@@ -79,5 +72,17 @@ func _on_line_edit_text_changed(new_text: String) -> void:
 
 func _on_cost_value_changed(value: float) -> void:
 	cards[currentCard].Energy = value
+	SetCard(cards[currentCard])
+	ResaveCard()
+
+
+func _on_put_on_top_toggled(toggled_on: bool) -> void:
+	cards[currentCard].PutOnTop = toggled_on
+	SetCard(cards[currentCard])
+	ResaveCard()
+
+
+func _on_manual_discard_toggled(toggled_on: bool) -> void:
+	cards[currentCard].CanManuallyDiscard = toggled_on
 	SetCard(cards[currentCard])
 	ResaveCard()

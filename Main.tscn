@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://r705uaao8chq"]
 
 [ext_resource type="Script" uid="uid://ck2v07shcn8ho" path="res://Main.gd" id="1_glv2v"]
-[ext_resource type="PackedScene" uid="uid://dh3bwvtubkl7h" path="res://Scenes/CardBuilder.tscn" id="2_r0du0"]
 [ext_resource type="PackedScene" uid="uid://sf4cxl8op2tv" path="res://MetalEngineBase/Utils/ResourcePicker.tscn" id="2_uu6xs"]
 
 [node name="Control" type="Control" unique_id=794670684 node_paths=PackedStringArray("projectPicker", "basePackPicker")]
@@ -12,7 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_glv2v")
-cardBuilderScene = ExtResource("2_r0du0")
+cardBuilderScene = "uid://dh3bwvtubkl7h"
 projectPicker = NodePath("PanelContainer/MarginContainer/VBoxContainer/ProjectPicker")
 basePackPicker = NodePath("PanelContainer/MarginContainer/VBoxContainer/BasePackPicker")
 
@@ -41,6 +40,7 @@ text = "Project Path"
 
 [node name="ProjectPicker" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=316868228 instance=ExtResource("2_uu6xs")]
 layout_mode = 2
+size_flags_vertical = 1
 resource_Type = 2
 allowExternalLinks = true
 
@@ -50,6 +50,7 @@ text = "Base Pack"
 
 [node name="BasePackPicker" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1898830005 instance=ExtResource("2_uu6xs")]
 layout_mode = 2
+size_flags_vertical = 1
 resource_Tyoes = PackedStringArray("*.pck")
 allowExternalLinks = true
 
