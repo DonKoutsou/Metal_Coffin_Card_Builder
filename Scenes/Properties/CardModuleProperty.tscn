@@ -2,8 +2,9 @@
 
 [ext_resource type="StyleBox" uid="uid://ci3yyoa54a17w" path="res://MetalEngineBase/Inventory/YellowPanel.tres" id="1_8yh2p"]
 [ext_resource type="Script" uid="uid://1gaw0y26isut" path="res://Scenes/Properties/card_module_property.gd" id="1_ctj4c"]
+[ext_resource type="Texture2D" uid="uid://e5i0hxvxkapf" path="res://Scenes/FoldableContainer/X.png" id="3_hej50"]
 
-[node name="PanelContainer" type="PanelContainer" unique_id=2071651446 node_paths=PackedStringArray("nameLabel")]
+[node name="PanelContainer" type="PanelContainer" unique_id=2071651446 node_paths=PackedStringArray("nameLabel", "removeButton")]
 custom_minimum_size = Vector2(0, 30)
 custom_maximum_size = Vector2(-1, 30)
 anchors_preset = 15
@@ -16,6 +17,7 @@ size_flags_vertical = 3
 theme_override_styles/panel = ExtResource("1_8yh2p")
 script = ExtResource("1_ctj4c")
 nameLabel = NodePath("VBoxContainer/Label")
+removeButton = NodePath("VBoxContainer/Remove")
 
 [node name="VBoxContainer" type="HBoxContainer" parent="." unique_id=1560259221]
 layout_mode = 2
@@ -25,3 +27,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 text = "Property Name"
+
+[node name="Remove" type="Button" parent="VBoxContainer" unique_id=977116114]
+visible = false
+layout_mode = 2
+icon = ExtResource("3_hej50")
+
+[connection signal="pressed" from="VBoxContainer/Remove" to="." method="_on_remove_pressed"]

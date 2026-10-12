@@ -9,4 +9,5 @@ func SetProperty(pName : String, value : Variant) -> void:
 	picker.SetFile(value)
 
 func _on_resource_picker_changed(t: String) -> void:
+	propertyValue = t
 	PropertyChanged.emit(propertyName, t)

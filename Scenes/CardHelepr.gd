@@ -232,3 +232,14 @@ static func get_exported_enum_data(prop_dict: Dictionary) -> PackedStringArray:
 			enum_data.append(keys[i])
 			
 	return enum_data
+
+#----------------------------------------------------------------------
+static func get_exported_enum_data_from_hint(hint: String) -> PackedStringArray:
+	var enum_data : PackedStringArray = []
+
+	var keys = hint.split(",")
+	
+	for i in keys.size():
+		enum_data.append(keys[i])
+			
+	return enum_data

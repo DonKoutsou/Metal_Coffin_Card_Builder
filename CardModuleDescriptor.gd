@@ -63,7 +63,7 @@ func ConfigureCard(c : CardStats) -> void:
 	
 	var props = CardHelper.get_all_script_variables(c)
 	
-	var wantedProps : PackedStringArray = ["CardName", "txFile", "Energy", "CardDescriptionOverride", "WeapT","Type", "PutOnTop", "CanManuallyDiscard", "AllowTier", "IsDisposition", "PlayAnimation"]
+	var wantedProps : PackedStringArray = ["CardName", "UseConditions", "txFile", "Energy", "CardDescriptionOverride", "WeapT","Type", "PutOnTop", "CanManuallyDiscard", "AllowTier", "IsDisposition", "PlayAnimation"]
 	
 	for prop : Dictionary in props:
 		var properyName : String = prop["name"]

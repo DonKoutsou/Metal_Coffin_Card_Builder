@@ -11,6 +11,7 @@ class_name CardModuleSection
 @export var floatScene : PackedScene
 @export var stringScene : PackedScene
 @export var stringFileScene : PackedScene
+@export var arrayScene : PackedScene
 
 signal Added(new)
 signal Removed(removed)
@@ -26,7 +27,11 @@ var MaxAmm : int = 0
 enum SectionType {
 	MODULE,
 	PASSIVE,
-	DAMAGE_INFO
+	DAMAGE_INFO,
+	BOOL,
+	FLOAT,
+	INT,
+	STRING,
 }
 
 func SetSectionName(sectionName : String) -> void:
@@ -121,6 +126,9 @@ func ConfigureDamageInfo(info : DamageInfo) -> void:
 		if (moduleDesc):
 			moduleContainer.GetModulePropertyParent().add_child(moduleDesc)
 
+func ConfigureArrayProp(desc : CardModuleProperty) -> void:
+	GetContainer().add_child(desc)
+
 func ManualProp(prop : Dictionary, obj : Object) -> void:
 	var moduleDesc = HandleProperty(prop, obj)
 	if (moduleDesc):
@@ -169,39 +177,86 @@ func HandleProperty(prop : Dictionary, obj : Object) -> Control:
 				moduleDesc = stringScene.instantiate()
 		
 		Variant.Type.TYPE_ARRAY:
-			var newSect : CardModuleSection = load(scene_file_path).instantiate()
-			newSect.SetSectionName(properyName)
-			
 			var infoArr : Array = obj.get(properyName)
 			
-			newSect.Added.connect(AddedInArray.bind(infoArr))
-			newSect.Removed.connect(RemovedFromArray.bind(infoArr))
 			
-			newSect.MovedUp.connect(MovedUpInArray.bind(infoArr))
-			newSect.MovedDown.connect(MovedDownInArray.bind(infoArr))
 			
-			newSect.PropertyChanged.connect(ModulePropertyChanged)
-			newSect.MaxAmm = 10
-			for g in infoArr:
-				if (g is DamageInfo):
-					newSect.ConfigureDamageInfo(g)
+			var arrInfo = get_array_type_info(infoArr)
+			
+			if (arrInfo["script"]):
+				var newSect : CardModuleSection = load(scene_file_path).instantiate()
+				newSect.SetSectionName(properyName)
+				
+				newSect.Added.connect(AddedInArray.bind(infoArr))
+				newSect.Removed.connect(RemovedFromArray.bind(infoArr))
+				
+				newSect.MovedUp.connect(MovedUpInArray.bind(infoArr))
+				newSect.MovedDown.connect(MovedDownInArray.bind(infoArr))
+				
+				newSect.PropertyChanged.connect(ModulePropertyChanged)
+				newSect.MaxAmm = 10
+			
+				var script : Script = arrInfo["script"]
+				var instance = script.new()
+				if (instance is DamageInfo):
 					newSect.SectionT = SectionType.DAMAGE_INFO
-				if (g is CardModule):
-					newSect.ConfigureModule(g)
+					
+					for index in infoArr.size():
+						var v = infoArr[index]
+						newSect.ConfigureDamageInfo(v)
+				
+				if (instance is CardModule):
 					newSect.SectionT = SectionType.MODULE
 					
-			newSect.custom_minimum_size = Vector2(size.x - 50, 0)
-			
-			
-			return newSect
+					for index in infoArr.size():
+						var v = infoArr[index]
+						newSect.ConfigureModule(v)
+				
+				return newSect
+			else:
+				print(arrInfo)
+				print(hintString)
+				var arrType = arrInfo["builtin_type"]
+				
+				var arrDesc : CardModuleArrayProperty = arrayScene.instantiate()
+				arrDesc.arrType = arrType
+				arrDesc.arr = infoArr
+				
+				match (arrType):
+						Variant.Type.TYPE_BOOL:
+							arrDesc.scene = boolScene
+						Variant.Type.TYPE_INT:
+							if (hint == PropertyHint.PROPERTY_HINT_TYPE_STRING):
+								arrDesc.scene = enumScene
+								arrDesc.enumData = CardHelper.get_exported_enum_data_from_hint(hintString.substr(4, hintString.length()))
+							else:
+								arrDesc.scene = intScene
+						Variant.Type.TYPE_FLOAT:
+							arrDesc.scene = floatScene
+						Variant.Type.TYPE_STRING:
+							arrDesc.scene = stringScene
+				
+				moduleDesc = arrDesc
 		_:
 			printerr("Could not map property {0} of type {1}".format([properyName, type]))
 			return
-	
+
 	moduleDesc.SetProperty(properyName, obj.get(properyName))
 	moduleDesc.PropertyChanged.connect(OnPropertyChanged.bind(obj))
+		
 	return moduleDesc
 
+func get_array_type_info(arr: Array) -> Dictionary:
+	if not arr.is_typed():
+		return {"typed": false}
+
+	return {
+		"typed": true,
+		"builtin_type": arr.get_typed_builtin(),
+		"builtin_type_name": type_string(arr.get_typed_builtin()),
+		"class_name": arr.get_typed_class_name(),
+		"script": arr.get_typed_script()
+	}
 #-------------------------------------------------------------------
 func AddedInArray(added , arr : Array) -> void:
 	arr.append(added)
@@ -380,6 +435,10 @@ func OnPropertyChanged(pName : String, newValue : Variant, obj : Object) -> void
 	obj.set(pName, newValue)
 	PropertyChanged.emit()
 
+func ArrayPropertyChanged(index : int, newValue : Variant, arr : Array) -> void:
+	arr[index] = newValue
+	PropertyChanged.emit()
+
 #-------------------------------------------------------------------
 func _on_add_pressed() -> void:
 	if (SectionT == SectionType.MODULE):
@@ -391,3 +450,7 @@ func _on_add_pressed() -> void:
 	else: if (SectionT == SectionType.DAMAGE_INFO):
 		var newInfo = AddDamageInfo()
 		Added.emit(newInfo)
+	else: if (SectionT == SectionType.DAMAGE_INFO):
+		var newInfo = AddDamageInfo()
+		Added.emit(newInfo)
+		

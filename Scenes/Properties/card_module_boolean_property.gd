@@ -10,4 +10,5 @@ func SetProperty(pName : String, value : Variant) -> void:
 
 
 func _on_check_box_toggled(toggled_on: bool) -> void:
+	propertyValue = toggled_on
 	PropertyChanged.emit(propertyName, toggled_on)

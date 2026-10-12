@@ -13,4 +13,5 @@ func SetProperty(pName : String, value : Variant) -> void:
 
 
 func _on_spin_box_value_changed(value: float) -> void:
-	PropertyChanged.emit(propertyName, value)
+	propertyValue = int(value)
+	PropertyChanged.emit(propertyName, int(value))

@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://deq3ume1168c" path="res://Scenes/Properties/CardModule_Float_Property.tscn" id="8_qw6fc"]
 [ext_resource type="PackedScene" uid="uid://4ixttwcew8em" path="res://Scenes/Properties/CardModule_String_Property.tscn" id="9_1mmtn"]
 [ext_resource type="PackedScene" uid="uid://c7smgltu25ih4" path="res://Scenes/Properties/CardModule_StringFile_Property.tscn" id="10_8p374"]
+[ext_resource type="PackedScene" uid="uid://0sv7tkid28y1" path="res://Scenes/Properties/CardModule_Array_Property.tscn" id="11_8tud8"]
 
 [node name="FoldableContainer" unique_id=811239154 instance=ExtResource("1_ipnto")]
 script = ExtResource("2_unefd")
@@ -21,3 +22,4 @@ enumScene = ExtResource("7_e4x5t")
 floatScene = ExtResource("8_qw6fc")
 stringScene = ExtResource("9_1mmtn")
 stringFileScene = ExtResource("10_8p374")
+arrayScene = ExtResource("11_8tud8")

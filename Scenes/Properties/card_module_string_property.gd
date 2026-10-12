@@ -9,4 +9,5 @@ func SetProperty(pName : String, value : Variant) -> void:
 	line.text = value
 	
 func _on_line_edit_text_changed(new_text: String) -> void:
+	propertyValue = new_text
 	PropertyChanged.emit(propertyName, new_text)

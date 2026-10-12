@@ -8,7 +8,9 @@ class_name CardModuleEnumProperty
 
 func SetOptions(ops : PackedStringArray) -> void:
 	for g in ops:
-		option.add_item(g)
+		g.rsplit()
+		
+		option.add_item(remove_ending(g))
 
 func SetProperty(pName : String, value : Variant) -> void:
 	super(pName, value)
@@ -16,4 +18,10 @@ func SetProperty(pName : String, value : Variant) -> void:
 
 
 func _on_option_button_item_selected(index: int) -> void:
+	propertyValue = index
 	PropertyChanged.emit(propertyName, index)
+
+func remove_ending(text: String) -> String:
+	var regex := RegEx.new()
+	regex.compile(":\\d+$")
+	return regex.sub(text, "")

@@ -19,20 +19,12 @@ var folded : bool  = true:
 		folded = value
 		FoldToggled(value)
 
-
-
 func DissableMoving() -> void:
 	$VBoxContainer/HBoxContainer/MoveUp.hide()
 	$VBoxContainer/HBoxContainer/MoveDown.hide()
 
 func DissableAdding() -> void:
 	$VBoxContainer/HBoxContainer/Add.hide()
-
-#func _ready() -> void:
-	#child_entered_tree.connect(ChildAdded)
-#
-#func ChildAdded(newChild : Node) -> void:
-	#newChild.reparent($VBoxContainer/VBoxContainer)
 
 func GetContainer() -> Control:
 	return container
@@ -55,7 +47,6 @@ func FoldToggled(t : bool) -> void:
 	else:
 		$VBoxContainer/HBoxContainer/Expand.icon = load("res://Scenes/FoldableContainer/Arrow2.png")
 	GetContainer().get_parent().visible = !t
-
 
 func _on_add_pressed() -> void:
 	Add.emit()
