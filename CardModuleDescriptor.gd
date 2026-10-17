@@ -63,7 +63,7 @@ func ConfigureCard(c : CardStats) -> void:
 	
 	var props = CardHelper.get_all_script_variables(c)
 	
-	var wantedProps : PackedStringArray = ["CardName", "UseConditions", "txFile", "Energy", "CardDescriptionOverride", "WeapT","Type", "PutOnTop", "CanManuallyDiscard", "AllowTier", "IsDisposition", "PlayAnimation"]
+	var wantedProps : PackedStringArray = ["CardName", "UseConditions", "TestVar", "TestVar2", "TestVar3", "TestVar4", "txFile", "Energy", "CardDescriptionOverride", "WeapT","Type", "PutOnTop", "CanManuallyDiscard", "AllowTier", "IsDisposition", "PlayAnimation"]
 	
 	for prop : Dictionary in props:
 		var properyName : String = prop["name"]
@@ -140,8 +140,12 @@ func OnPropertyChanged() -> void:
 	ResaveCard()
 	CardUpdated.emit()
 
+##Make sure to save and add back the UID, since the file is saved outside the project it will never get a UID
 func ResaveCard() -> void:
+	var originalUID = CardHelper.get_uid_from_tres(describedCard.resource_path)
+	
 	ResourceSaver.save(describedCard, describedCard.resource_path)
+	CardHelper.write_uid_to_tres(describedCard.resource_path, originalUID)
 	print("Card Saved At {0}".format([describedCard.resource_path]))
 
 func AddSection(sectionName : String) -> CardModuleSection:

@@ -28,6 +28,7 @@ func SetCard(c : CardStats) -> void:
 ##Checks happening directory and pulls all of them out
 func UpdateDilogues() -> void:
 	Menu.clear()
+	cards.clear()
 	var DirsToExplore :Array[String] = [startingDir + "/Resources/Cards/"]
 	for g in DirsToExplore:
 		var dir = DirAccess.open(g)
@@ -59,30 +60,48 @@ func _on_popup_menu_index_pressed(index: int) -> void:
 func _on_panel_container_3_card_updated() -> void:
 	SetCard(cards[currentCard])
 
+##Make sure to save and add back the UID, since the file is saved outside the project it will never get a UID
 func ResaveCard() -> void:
-	ResourceSaver.save(cards[currentCard], cards[currentCard].resource_path)
+	var card = cards[currentCard]
+	var originalUID = CardHelper.get_uid_from_tres(card.resource_path)
+	
+	ResourceSaver.save(card, card.resource_path)
+	CardHelper.write_uid_to_tres(card.resource_path, originalUID)
+	
 	print("Card Saved At {0}".format([cards[currentCard].resource_path]))
 
 
-func _on_line_edit_text_changed(new_text: String) -> void:
-	cards[currentCard].CardName = new_text
-	SetCard(cards[currentCard])
-	ResaveCard()
+func _on_new_pressed() -> void:
+	var diag = FileDialog.new()
+	diag.use_native_dialog = true
+	diag.access = FileDialog.ACCESS_FILESYSTEM
+	diag.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	diag.filters.append("*.tres")
+	diag.current_dir = startingDir + "/Resources/Cards/"
+	add_child(diag)
+	diag.popup_centered()
 
+	var f : String = await diag.file_selected
+	if (f.is_empty()):
+		return
+	if (f.get_extension().is_empty()):
+		f += ".tres"
+	else :if (f.get_extension() != "tres"):
+		return
 
-func _on_cost_value_changed(value: float) -> void:
-	cards[currentCard].Energy = value
-	SetCard(cards[currentCard])
-	ResaveCard()
-
-
-func _on_put_on_top_toggled(toggled_on: bool) -> void:
-	cards[currentCard].PutOnTop = toggled_on
-	SetCard(cards[currentCard])
-	ResaveCard()
-
-
-func _on_manual_discard_toggled(toggled_on: bool) -> void:
-	cards[currentCard].CanManuallyDiscard = toggled_on
-	SetCard(cards[currentCard])
-	ResaveCard()
+	var newCard = CardStats.new()
+	var cardName = f.get_file().replace(".tres", "")
+	newCard.CardName = cardName
+	
+	if (FileAccess.file_exists(f)):
+		var existingIndex = cards.find(ResourceLoader.load(f))
+		cards[existingIndex] = newCard
+		currentCard = existingIndex
+		SetCard(newCard)
+	else:
+		cards.append(newCard)
+		currentCard = cards.size() - 1
+		SetCard(newCard)
+	
+	ResourceSaver.save(newCard, f)
+	

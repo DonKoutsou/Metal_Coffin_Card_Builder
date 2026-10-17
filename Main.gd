@@ -94,9 +94,9 @@ static func LoadModScripts() -> void:
 	for info: Dictionary in global_class_list:
 		var clName: String = info["class"]
 
-		if CardHelper._inherits_from(clName, "CardModule", classes) or CardHelper._inherits_from(clName, "Card_Passive", classes):
-			var class_path: String = info["path"]
-			existingClasses[clName] = class_path
+		#if CardHelper._inherits_from(clName, "CardModule", classes) or CardHelper._inherits_from(clName, "Card_Passive", classes):
+		var class_path: String = info["path"]
+		existingClasses[clName] = class_path
 	
 	var DirsToExplore :Array[String] = [modCardModuleDir]
 	for g in DirsToExplore:

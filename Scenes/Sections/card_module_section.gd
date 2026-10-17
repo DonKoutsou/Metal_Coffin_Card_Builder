@@ -214,8 +214,6 @@ func HandleProperty(prop : Dictionary, obj : Object) -> Control:
 				
 				return newSect
 			else:
-				print(arrInfo)
-				print(hintString)
 				var arrType = arrInfo["builtin_type"]
 				
 				var arrDesc : CardModuleArrayProperty = arrayScene.instantiate()
@@ -226,7 +224,7 @@ func HandleProperty(prop : Dictionary, obj : Object) -> Control:
 						Variant.Type.TYPE_BOOL:
 							arrDesc.scene = boolScene
 						Variant.Type.TYPE_INT:
-							if (hint == PropertyHint.PROPERTY_HINT_TYPE_STRING):
+							if (hintString.length() > 3):
 								arrDesc.scene = enumScene
 								arrDesc.enumData = CardHelper.get_exported_enum_data_from_hint(hintString.substr(4, hintString.length()))
 							else:

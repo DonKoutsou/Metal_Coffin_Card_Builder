@@ -37,7 +37,7 @@ func SetProperty(pName : String, value : Variant) -> void:
 		
 
 func _on_add_pressed() -> void:
-	match typeof(arrType):
+	match arrType:
 		TYPE_INT:
 			arr.append(0)
 			var prop : CardModuleProperty = scene.instantiate()
@@ -77,7 +77,7 @@ func _on_add_pressed() -> void:
 		TYPE_STRING:
 			arr.append("")
 			var prop : CardModuleProperty = scene.instantiate()
-			prop.SetProperty(var_to_str(arr.size() - 1), false)
+			prop.SetProperty(var_to_str(arr.size() - 1), "")
 			
 			arrayContentParent.add_child(prop)
 			
